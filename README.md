@@ -62,9 +62,11 @@ echo "1.2.3rc1" | newversion get pre      # rc1
 echo "1.2.3rc1" | newversion get rc       # 1
 echo "1.2.3rc1" | newversion get alpha    # 0
 
-echo "1.2.3rc1" | newversion stable       # error!
-echo "1.2.3" | newversion stable          # 1.2.3
-echo "1.2.3" | newversion stable && echo "Stable!" # Stable!
+echo "1.2.3rc1" | newversion stable # 1.2.3
+
+echo "1.2.3rc1" | newversion is_stable       # error!
+echo "1.2.3" | newversion is_stable          # 1.2.3
+echo "1.2.3" | newversion is_stable && echo "Stable!" # Stable!
 
 echo "1.2.3rc1" | newversion gt "1.2.3"   # error!
 echo "1.2.3rc1" | newversion lte "1.2.3"  # "1.2.3rc1"

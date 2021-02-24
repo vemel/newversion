@@ -30,7 +30,7 @@ keywords = ["version", "pep440"]
 "Tracker" = "https://github.com/vemel/newversion/issues"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.6.10"
 packaging = "^20.0"
 typing-extensions = "^3.7.4"
 

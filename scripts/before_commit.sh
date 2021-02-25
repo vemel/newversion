@@ -4,10 +4,10 @@ set -e
 ROOT_PATH=$(dirname $(dirname $0))
 cd $ROOT_PATH
 
-npx pyright
-pytest
 black .
 isort .
+npx pyright
+pytest
 flake8 newversion
 
 ./scripts/docs.sh

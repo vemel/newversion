@@ -22,7 +22,8 @@ def get_stdin() -> Version:
         return Version.zero()
 
     for line in sys.stdin.readlines():
-        return Version(line.strip().split(" ")[-1])
+        safe_line = line.strip().split(" ")[-1].replace('"', "").replace("'", "")
+        return Version(safe_line)
 
     return Version.zero()
 

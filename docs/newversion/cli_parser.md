@@ -28,7 +28,7 @@ Parsed version.
 
 ## parse_args
 
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/cli_parser.py#L30)
+[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/cli_parser.py#L31)
 
 ```python
 def parse_args(args: Sequence[str]) -> argparse.Namespace:

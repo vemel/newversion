@@ -41,7 +41,7 @@ jobs:
         env:
           TAG: ${{ steps.tag.outputs.result }}
         run: |
-          VERSION=`echo "${TAG}" | python -m newversion`
+          VERSION=`echo ${TAG} | tr '"' ' ' | python -m newversion`
           echo "${VERSION}"
           echo "::set-output name=result::${VERSION}"
       - name: Update changelog

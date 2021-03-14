@@ -13,7 +13,9 @@ _R = TypeVar("_R", bound="Version")
 
 
 class VersionError(packaging.version.InvalidVersion):
-    pass
+    """
+    Wrapper for InvalidVersion error.
+    """
 
 
 class Version(packaging.version.Version):
@@ -404,6 +406,3 @@ class Version(packaging.version.Version):
         )
         base_kwargs.update(kwargs)
         return BaseVersion(**base_kwargs)
-
-    def get_major(self: _R, number: int) -> _R:
-        return self._replace(self._copy_base(release=(number, self.minor, self.micro)))

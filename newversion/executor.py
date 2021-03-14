@@ -19,15 +19,15 @@ class Executor:
     """
 
     def __init__(self, config: argparse.Namespace) -> None:
-        self.config = config
+        self._config = config
 
     @property
     def input(self) -> Version:
-        return self.config.input
+        return self._config.input
 
     @property
     def other(self) -> Version:
-        return self.config.other
+        return self._config.other
 
     def execute(self) -> str:
         """
@@ -47,9 +47,9 @@ class Executor:
             gte=self._command_gte,
             eq=self._command_eq,
         )
-        command = self.config.command
+        command = self._config.command
         if command in commands:
-            return commands[self.config.command]().dumps()
+            return commands[self._config.command]().dumps()
 
         if command == "get":
             return self._command_get()
@@ -57,7 +57,7 @@ class Executor:
         return self.input.dumps()
 
     def _command_get(self) -> str:
-        release = self.config.release
+        release = self._config.release
         if release == VersionParts.LOCAL:
             return self.input.local[0] if self.input.local else ""
 
@@ -87,31 +87,31 @@ class Executor:
         return str(result)
 
     def _command_bump(self) -> Version:
-        if self.config.release in (
+        if self._config.release in (
             VersionParts.MICRO,
             VersionParts.MAJOR,
             VersionParts.MINOR,
         ):
-            return self.input.bump_release(self.config.release, self.config.increment)
+            return self.input.bump_release(self._config.release, self._config.increment)
 
-        if self.config.release == VersionParts.PRE:
-            return self.input.bump_prerelease(self.config.increment)
+        if self._config.release == VersionParts.PRE:
+            return self.input.bump_prerelease(self._config.increment)
 
-        if self.config.release == VersionParts.POST:
-            return self.input.bump_postrelease(self.config.increment)
+        if self._config.release == VersionParts.POST:
+            return self.input.bump_postrelease(self._config.increment)
 
-        if self.config.release in (
+        if self._config.release in (
             VersionParts.RC,
             VersionParts.ALPHA,
             VersionParts.BETA,
         ):
-            return self.input.bump_prerelease(self.config.increment, self.config.release)
+            return self.input.bump_prerelease(self._config.increment, self._config.release)
 
         return self.input
 
     def _command_set(self) -> Version:
-        value = self.config.value
-        if self.config.release == VersionParts.PRE:
+        value = self._config.value
+        if self._config.release == VersionParts.PRE:
             if self.input.prerelease_type == VersionParts.ALPHA:
                 return self.input.replace(alpha=value)
             if self.input.prerelease_type == VersionParts.BETA:
@@ -121,7 +121,7 @@ class Executor:
 
             return self.input.replace(rc=value)
 
-        kwargs = {self.config.release: value}
+        kwargs = {self._config.release: value}
         return self.input.replace(**kwargs)
 
     def _command_stable(self) -> Version:

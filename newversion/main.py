@@ -15,9 +15,24 @@ def main_api(config: argparse.Namespace) -> str:
     """
     Main API entrypoint.
     """
-    executor = Executor(config)
+    executor = Executor(config.input)
     try:
-        return executor.execute()
+        if config.command in {"lt", "lte", "gt", "gte", "eq"}:
+            executor.command_compare(config.command, config.other)
+            return config.input.dumps()
+        if config.command == "is_stable":
+            executor.command_is_stable()
+            return config.input.dumps()
+        if config.command == "set":
+            return executor.command_set(config.release, config.value).dumps()
+        if config.command == "get":
+            return executor.command_get(config.release)
+        if config.command == "bump":
+            return executor.command_bump(config.release, config.increment).dumps()
+        if config.command == "stable":
+            return executor.command_stable().dumps()
+
+        return config.input.dumps()
     except ExecutorError as e:
         raise CLIError(e)
 

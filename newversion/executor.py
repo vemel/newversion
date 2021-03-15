@@ -1,7 +1,10 @@
 """
 CLI commands executor.
 """
-import argparse
+
+import operator
+
+from typing_extensions import Literal
 
 from newversion.constants import VersionParts
 from newversion.version import Version
@@ -18,141 +21,112 @@ class Executor:
     CLI commands executor.
     """
 
-    def __init__(self, config: argparse.Namespace) -> None:
-        self._config = config
+    def __init__(
+        self,
+        input: Version = Version.zero(),
+    ) -> None:
+        self._input = input
 
-    @property
-    def input(self) -> Version:
-        return self._config.input
+    def command_get(self, release: str) -> str:
+        if release == VersionParts.LOCAL:
+            return self._input.local[0] if self._input.local else ""
 
-    @property
-    def other(self) -> Version:
-        return self._config.other
+        if release == VersionParts.PRE:
+            return f"{self._input.pre[0]}{self._input.pre[1]}" if self._input.pre else ""
 
-    def execute(self) -> str:
+        if release == VersionParts.POST:
+            return str(self._input.post) if self._input.post else "0"
+
+        if release == VersionParts.ALPHA:
+            return (
+                str(self._input.pre[-1]) if self._input.pre and self._input.pre[0] == "a" else "0"
+            )
+
+        if release == VersionParts.BETA:
+            return (
+                str(self._input.pre[-1]) if self._input.pre and self._input.pre[0] == "b" else "0"
+            )
+
+        if release == VersionParts.RC:
+            return (
+                str(self._input.pre[-1]) if self._input.pre and self._input.pre[0] == "rc" else "0"
+            )
+
+        if release == VersionParts.EPOCH:
+            return str(self._input.epoch) if self._input.epoch else "0"
+
+        result = dict(
+            major=self._input.major,
+            minor=self._input.minor,
+            micro=self._input.micro,
+        )[release]
+        return str(result)
+
+    def command_bump(self, release: str, increment: int) -> Version:
+        if release in (
+            VersionParts.MICRO,
+            VersionParts.MAJOR,
+            VersionParts.MINOR,
+        ):
+            return self._input.bump_release(release, increment)
+
+        if release == VersionParts.PRE:
+            return self._input.bump_prerelease(increment)
+
+        if release == VersionParts.POST:
+            return self._input.bump_postrelease(increment)
+
+        if release in (
+            VersionParts.RC,
+            VersionParts.ALPHA,
+            VersionParts.BETA,
+        ):
+            return self._input.bump_prerelease(increment, release)
+
+        raise ExecutorError(f"Unknown release name: {release}")
+
+    def command_set(self, release: str, value: int) -> Version:
+        if release == VersionParts.PRE:
+            if self._input.prerelease_type == VersionParts.ALPHA:
+                return self._input.replace(alpha=value)
+            if self._input.prerelease_type == VersionParts.BETA:
+                return self._input.replace(beta=value)
+            if self._input.prerelease_type == VersionParts.RC:
+                return self._input.replace(rc=value)
+
+            return self._input.replace(rc=value)
+
+        kwargs = {release: value}
+        return self._input.replace(**kwargs)
+
+    def command_stable(self) -> Version:
+        return self._input.get_stable()
+
+    def command_is_stable(self) -> None:
+        if not self._input.is_stable:
+            raise ExecutorError(f"Version {self._input} is not stable")
+
+    def command_compare(
+        self, command: Literal["lt", "lte", "gt", "gte", "eq", "ne"], other: Version
+    ) -> None:
         """
-        Execute command based on `config`.
+        Execute compare command.
+
+        Arguments:
+            command -- Compare operator.
+            other -- Version to compare to.
 
         Returns:
             Processed `Version`.
         """
         commands = dict(
-            bump=self._command_bump,
-            set=self._command_set,
-            stable=self._command_stable,
-            is_stable=self._command_is_stable,
-            lt=self._command_lt,
-            lte=self._command_lte,
-            gt=self._command_gt,
-            gte=self._command_gte,
-            eq=self._command_eq,
+            lt=(operator.lt, "lesser than"),
+            lte=(operator.le, "lesser than or equal to"),
+            gt=(operator.gt, "greater than"),
+            gte=(operator.ge, "greater than or equal to"),
+            eq=(operator.eq, "equal to"),
+            ne=(operator.ne, "notequal to"),
         )
-        command = self._config.command
-        if command in commands:
-            return commands[self._config.command]().dumps()
-
-        if command == "get":
-            return self._command_get()
-
-        return self.input.dumps()
-
-    def _command_get(self) -> str:
-        release = self._config.release
-        if release == VersionParts.LOCAL:
-            return self.input.local[0] if self.input.local else ""
-
-        if release == VersionParts.PRE:
-            return f"{self.input.pre[0]}{self.input.pre[1]}" if self.input.pre else ""
-
-        if release == VersionParts.POST:
-            return str(self.input.post[-1]) if self.input.post else "0"
-
-        if release == VersionParts.ALPHA:
-            return str(self.input.pre[-1]) if self.input.pre and self.input.pre[0] == "a" else "0"
-
-        if release == VersionParts.BETA:
-            return str(self.input.pre[-1]) if self.input.pre and self.input.pre[0] == "b" else "0"
-
-        if release == VersionParts.RC:
-            return str(self.input.pre[-1]) if self.input.pre and self.input.pre[0] == "rc" else "0"
-
-        if release == VersionParts.EPOCH:
-            return str(self.input.epoch) if self.input.epoch else "0"
-
-        result = dict(
-            major=self.input.major,
-            minor=self.input.minor,
-            micro=self.input.micro,
-        )[release]
-        return str(result)
-
-    def _command_bump(self) -> Version:
-        if self._config.release in (
-            VersionParts.MICRO,
-            VersionParts.MAJOR,
-            VersionParts.MINOR,
-        ):
-            return self.input.bump_release(self._config.release, self._config.increment)
-
-        if self._config.release == VersionParts.PRE:
-            return self.input.bump_prerelease(self._config.increment)
-
-        if self._config.release == VersionParts.POST:
-            return self.input.bump_postrelease(self._config.increment)
-
-        if self._config.release in (
-            VersionParts.RC,
-            VersionParts.ALPHA,
-            VersionParts.BETA,
-        ):
-            return self.input.bump_prerelease(self._config.increment, self._config.release)
-
-        return self.input
-
-    def _command_set(self) -> Version:
-        value = self._config.value
-        if self._config.release == VersionParts.PRE:
-            if self.input.prerelease_type == VersionParts.ALPHA:
-                return self.input.replace(alpha=value)
-            if self.input.prerelease_type == VersionParts.BETA:
-                return self.input.replace(beta=value)
-            if self.input.prerelease_type == VersionParts.RC:
-                return self.input.replace(rc=value)
-
-            return self.input.replace(rc=value)
-
-        kwargs = {self._config.release: value}
-        return self.input.replace(**kwargs)
-
-    def _command_stable(self) -> Version:
-        return self.input.get_stable()
-
-    def _command_is_stable(self) -> Version:
-        if not self.input.is_stable:
-            raise ExecutorError(f"Version {self.input} is not stable")
-        return self.input
-
-    def _command_lt(self) -> Version:
-        if not (self.input < self.other):
-            raise ExecutorError(f"Version {self.input} is not lesser than {self.other}")
-        return self.input
-
-    def _command_lte(self) -> Version:
-        if not (self.input <= self.other):
-            raise ExecutorError(f"Version {self.input} is not lesser or equal to {self.other}")
-        return self.input
-
-    def _command_gt(self) -> Version:
-        if not (self.input > self.other):
-            raise ExecutorError(f"Version {self.input} is not greater than {self.other}")
-        return self.input
-
-    def _command_gte(self) -> Version:
-        if not (self.input >= self.other):
-            raise ExecutorError(f"Version {self.input} is not greater or equal to {self.other}")
-        return self.input
-
-    def _command_eq(self) -> Version:
-        if not (self.input == self.other):
-            raise ExecutorError(f"Version {self.input} is not equal to {self.other}")
-        return self.input
+        op, message = commands[command]
+        if not (op(self._input, other)):
+            raise ExecutorError(f"Version {self._input} is not {message} {other}")

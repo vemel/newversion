@@ -1,7 +1,7 @@
 import sys
 
 if sys.version_info < (3, 8, 0):
-    from typing_extensions import Literal
+    from typing_extensions import Literal  # type: ignore
 else:
     from typing import Literal
 

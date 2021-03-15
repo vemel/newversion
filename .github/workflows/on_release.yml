@@ -70,20 +70,26 @@ jobs:
         run: |
           test -f "pyproject.toml" && sed -i -E "s/^version\s*=\s*\".+/version = \"${VERSION}\"/" pyproject.toml
           test -f "setup.cfg" && sed -i -E "s/^version \s*=\s*.+/version = ${VERSION}/" setup.cfg
+      - name: Import GPG key
+        id: import_gpg
+        uses: crazy-max/ghaction-import-gpg@v3
+        with:
+          gpg-private-key: ${{ secrets.BOT_GPG_SIGNING_KEY }}
+          git-user-signingkey: true
+          git-commit-gpgsign: true
+          git-push-gpgsign: true
       - name: Commit changes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.version.outputs.result }}
           REPO: ${{ steps.repo.outputs.result }}
-          BRANCH: ${{ steps.branch.outputs.result }}
         run: |
-          git config --global user.email "volshebnyi@gmail.com"
-          git config --global user.name "${GITHUB_ACTOR}"
+          git checkout -b release/${VERSION}
           git add pyproject.toml
           git add setup.cfg
           git add CHANGELOG.md
           git commit -m "Bump version to ${VERSION}"
-          git push https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@${REPO} HEAD:${BRANCH}
+          git push --set-upstream origin release/${VERSION}
       - name: Publish to PyPI
         env:
           TWINE_USERNAME: "${{ secrets.PYPI_USERNAME }}"

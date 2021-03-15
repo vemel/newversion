@@ -7,6 +7,8 @@ and this project adheres to
 
 ## [Unreleased]
 
+## [1.7.0] - 2021-03-15
+
 ## [1.7.0rc1] - 2021-03-15
 ### Added
 - `[cli]` `echo "1.2.3" | newversion ne "1.2.4"` comamnd to raise error if version is not equal to other

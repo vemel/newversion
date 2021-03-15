@@ -19,3 +19,24 @@ class VersionParts:
     MICRO = "micro"
     LOCAL = "local"
     EPOCH = "epoch"
+
+
+class Commands:
+    """
+    CLI commands
+    """
+
+    LT = "lt"
+    LTE = "lte"
+    GT = "gt"
+    GTE = "gte"
+    EQ = "eq"
+    NE = "ne"
+
+    COMPARE = {LT, LTE, GT, GTE, EQ, NE}
+
+    IS_STABLE = "is_stable"
+    SET = "set"
+    GET = "get"
+    BUMP = "bump"
+    STABLE = "stable"

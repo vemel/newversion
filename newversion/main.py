@@ -2,6 +2,7 @@ import argparse
 import sys
 
 from newversion.cli_parser import parse_args
+from newversion.constants import Commands
 from newversion.executor import Executor, ExecutorError
 
 
@@ -17,19 +18,19 @@ def main_api(config: argparse.Namespace) -> str:
     """
     executor = Executor(config.input)
     try:
-        if config.command in {"lt", "lte", "gt", "gte", "eq"}:
+        if config.command in Commands.COMPARE:
             executor.command_compare(config.command, config.other)
             return config.input.dumps()
-        if config.command == "is_stable":
+        if config.command == Commands.IS_STABLE:
             executor.command_is_stable()
             return config.input.dumps()
-        if config.command == "set":
+        if config.command == Commands.SET:
             return executor.command_set(config.release, config.value).dumps()
-        if config.command == "get":
+        if config.command == Commands.GET:
             return executor.command_get(config.release)
-        if config.command == "bump":
+        if config.command == Commands.BUMP:
             return executor.command_bump(config.release, config.increment).dumps()
-        if config.command == "stable":
+        if config.command == Commands.STABLE:
             return executor.command_stable().dumps()
 
         return config.input.dumps()

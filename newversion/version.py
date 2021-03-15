@@ -5,9 +5,9 @@ from typing import Any, Dict, Optional, Tuple, Type, TypeVar
 
 import packaging.version
 from packaging.version import _Version as BaseVersion
-from typing_extensions import Literal
 
 from newversion.constants import VersionParts
+from newversion.type_defs import PrereleaseLooseTypeDef, PrereleaseTypeDef, ReleaseMainTypeDef
 
 _R = TypeVar("_R", bound="Version")
 
@@ -43,7 +43,7 @@ class Version(packaging.version.Version):
         return str(self)
 
     @property
-    def prerelease_type(self) -> Optional[Literal["rc", "alpha", "beta"]]:
+    def prerelease_type(self) -> Optional[PrereleaseTypeDef]:
         if not self.pre:
             return None
 
@@ -81,7 +81,7 @@ class Version(packaging.version.Version):
 
     def bump_release(
         self: _R,
-        release_type: Literal["major", "minor", "micro"] = VersionParts.MICRO,
+        release_type: ReleaseMainTypeDef = VersionParts.MICRO,
         inc: int = 1,
     ) -> _R:
         """
@@ -216,8 +216,8 @@ class Version(packaging.version.Version):
     def bump_prerelease(
         self: _R,
         inc: int = 1,
-        release_type: Literal["rc", "alpha", "beta", "a", "b"] = None,
-        bump_release: Literal["major", "minor", "micro"] = VersionParts.MICRO,
+        release_type: PrereleaseLooseTypeDef = None,
+        bump_release: ReleaseMainTypeDef = VersionParts.MICRO,
     ) -> _R:
         """
         Get next prerelease version.

@@ -23,9 +23,9 @@ jobs:
           script: |
             console.log(github.event);
             const message = github.event.head_commit.message;
-            if (!message.startsWith("Merge pull request ")):
+            if (!message.startsWith("Merge pull request "))
               return "";
-            if (!message.contains("/release/")):
+            if (!message.contains("/release/"))
               return "";
             const branchName = "release/" + message.split("/release/").pop()
             console.log(branchName);

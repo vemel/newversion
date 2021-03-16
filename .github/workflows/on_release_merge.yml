@@ -24,7 +24,7 @@ jobs:
             const message = context.payload.head_commit.message;
             if (!message.startsWith("Merge pull request "))
               return "";
-            const match = a.match(/release\/\S+/);
+            const match = message.match(/release\/\S+/);
             if (!match)
               return "";
 

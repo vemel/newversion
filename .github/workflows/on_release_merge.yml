@@ -34,6 +34,7 @@ jobs:
         env:
           BRANCH: ${{ steps.branch.outputs.result }}
         run: |
+          git fetch
           git checkout ${BRANCH}
       - name: Install dependencies
         if: steps.branch.outputs.result != ''

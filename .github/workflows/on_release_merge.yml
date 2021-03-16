@@ -22,6 +22,7 @@ jobs:
           result-encoding: string
           script: |
             console.log(github.event);
+            console.log(context);
             const message = github.event.head_commit.message;
             if (!message.startsWith("Merge pull request "))
               return "";

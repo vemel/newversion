@@ -37,9 +37,14 @@ python -m pip install newversion
 newversion            # 0.0.0
 newversion bump major # 1.0.0
 
-python setup.py --version  # 1.2.3
-python setup.py --version | newversion bump  # 1.2.4
-python setup.py --version | newversion get minor  # 2
+# get package version from pyproject.toml, setup.cfg or setup.py
+newversion package # 1.2.3
+newversion package | newversion bump  # 1.2.4
+newversion package | newversion get minor  # 2
+
+
+# bump minor version and update package version
+newversion package | newversion bump minor | newversion set_package
 
 echo "1.2.3rc1" | newversion bump micro   # 1.2.3
 echo "1.2.3rc1" | newversion bump minor   # 1.3.0

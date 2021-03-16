@@ -34,10 +34,10 @@ def main_api(config: argparse.Namespace) -> str:
             executor.command_is_stable()
             return ""
         if config.command == Commands.PACKAGE:
-            if config.set:
-                executor.command_set_version()
-                return ""
             return executor.command_get_version().dumps()
+        if config.command == Commands.SET_PACKAGE:
+            executor.command_set_version()
+            return ""
         if config.command == Commands.SET:
             return executor.command_set(config.release, config.value).dumps()
         if config.command == Commands.GET:

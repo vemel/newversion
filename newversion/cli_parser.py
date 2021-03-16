@@ -130,11 +130,14 @@ def parse_args(args: Sequence[str]) -> argparse.Namespace:
         help="Check if current version is not a pre- or dev release",
     )
 
-    parser_package = subparsers.add_parser(
+    subparsers.add_parser(
         Commands.PACKAGE,
-        help="Get or set Python package version. Supports setuptools and poetry.",
+        help="Get Python package version. Supports pyproject.toml, setup.cfg nad setup.py.",
     )
-    parser_package.add_argument("--set", action="store_true", help="Set version of Python package")
+    subparsers.add_parser(
+        Commands.SET_PACKAGE,
+        help="Set Python package version. Supports pyproject.toml, setup.cfg nad setup.py.",
+    )
 
     parser_lt = subparsers.add_parser(
         Commands.LT,

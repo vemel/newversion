@@ -43,3 +43,4 @@ class Commands:
     BUMP = "bump"
     STABLE = "stable"
     PACKAGE = "package"
+    SET_PACKAGE = "set_package"

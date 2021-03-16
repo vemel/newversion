@@ -2,6 +2,8 @@
 Constants used in project.
 """
 
+LOGGER_NAME = "newversion"
+
 
 class VersionParts:
     """
@@ -40,3 +42,4 @@ class Commands:
     GET = "get"
     BUMP = "bump"
     STABLE = "stable"
+    PACKAGE = "package"

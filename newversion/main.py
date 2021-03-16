@@ -1,15 +1,24 @@
 import argparse
+import logging
 import sys
 
 from newversion.cli_parser import parse_args
-from newversion.constants import Commands
-from newversion.executor import Executor, ExecutorError
+from newversion.constants import LOGGER_NAME, Commands
+from newversion.exceptions import CLIError, ExecutorError
+from newversion.executor import Executor
 
 
-class CLIError(Exception):
+def setup_logging(level: int) -> logging.Logger:
     """
-    Main CLI error
+    Setup logging for CLI usage.
     """
+    logger = logging.getLogger(LOGGER_NAME)
+    logger.setLevel(level)
+    stream_handler = logging.StreamHandler()
+    stream_handler.setLevel(level)
+    stream_handler.setFormatter(logging.Formatter("%(levelname)s - %(message)s"))
+    logger.addHandler(stream_handler)
+    return logger
 
 
 def main_api(config: argparse.Namespace) -> str:
@@ -20,10 +29,15 @@ def main_api(config: argparse.Namespace) -> str:
     try:
         if config.command in Commands.COMPARE:
             executor.command_compare(config.command, config.other)
-            return config.input.dumps()
+            return ""
         if config.command == Commands.IS_STABLE:
             executor.command_is_stable()
-            return config.input.dumps()
+            return ""
+        if config.command == Commands.PACKAGE:
+            if config.set:
+                executor.command_set_version()
+                return ""
+            return executor.command_get_version().dumps()
         if config.command == Commands.SET:
             return executor.command_set(config.release, config.value).dumps()
         if config.command == Commands.GET:
@@ -43,10 +57,18 @@ def main_cli() -> None:
     Main entrypoint for CLI.
     """
     config = parse_args(sys.argv[1:])
+    log_level = logging.INFO
+    if config.verbose:
+        log_level = logging.DEBUG
+    if config.quiet:
+        log_level = logging.CRITICAL
+
+    logger = setup_logging(log_level)
     try:
         output = main_api(config)
     except CLIError as e:
-        sys.stderr.write(f"ERROR {e}\n")
+        logger.error(f"{e}")
         sys.exit(1)
 
-    sys.stdout.write(f"{output}\n")
+    if output:
+        sys.stdout.write(f"{output}\n")

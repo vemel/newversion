@@ -52,6 +52,9 @@ def parse_args(args: Sequence[str]) -> argparse.Namespace:
         default=None,
         help="Input version, can be provided as a pipe-in as well.",
     )
+    parser.add_argument("-v", "--verbose", action="store_true", help="Verbose logging")
+    parser.add_argument("-q", "--quiet", action="store_true", help="No logging")
+
     subparsers = parser.add_subparsers(help="Available subcommands", dest="command")
     parser_bump = subparsers.add_parser(Commands.BUMP, help="Bump current version")
     parser_bump.add_argument(
@@ -121,10 +124,18 @@ def parse_args(args: Sequence[str]) -> argparse.Namespace:
     )
 
     subparsers.add_parser(Commands.STABLE, help="Get stable release of current version")
+
     subparsers.add_parser(
-        "is_stable",
+        Commands.IS_STABLE,
         help="Check if current version is not a pre- or dev release",
     )
+
+    parser_package = subparsers.add_parser(
+        Commands.PACKAGE,
+        help="Get or set Python package version. Supports setuptools and poetry.",
+    )
+    parser_package.add_argument("--set", action="store_true", help="Set version of Python package")
+
     parser_lt = subparsers.add_parser(
         Commands.LT,
         help="Check if current version is lesser than the other",

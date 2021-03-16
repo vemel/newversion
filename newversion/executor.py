@@ -3,16 +3,13 @@ CLI commands executor.
 """
 
 import operator
+from pathlib import Path
 
 from newversion.constants import VersionParts
+from newversion.exceptions import ExecutorError, PackageVersionError
+from newversion.package_version import PackageVersion
 from newversion.type_defs import OperatorTypeDef, ReleaseNonLocalTypeDef, ReleaseTypeDef
 from newversion.version import Version
-
-
-class ExecutorError(Exception):
-    """
-    Main CLI commands executor error.
-    """
 
 
 class Executor:
@@ -171,3 +168,15 @@ class Executor:
         op, message = commands[command]
         if not (op(self._input, other)):
             raise ExecutorError(f"Version {self._input} is {message} {other}")
+
+    def command_get_version(self) -> Version:
+        try:
+            return PackageVersion(Path.cwd()).get()
+        except PackageVersionError as e:
+            raise ExecutorError(e)
+
+    def command_set_version(self) -> None:
+        try:
+            PackageVersion(Path.cwd()).set(self._input)
+        except PackageVersionError as e:
+            raise ExecutorError(e)

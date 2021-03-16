@@ -1,11 +1,11 @@
-name: Bump version, update CHANGELOG.md and publish
+name: Create release pull request
 
 on:
   release:
     types: [published]
 
 jobs:
-  bump:
+  create-pull-request:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -44,7 +44,7 @@ jobs:
         uses: actions/github-script@v3
         with:
           result-encoding: string
-          script: return context.payload.repository.default_branch;
+          script: return context.payload.release.target_commitish;
       - name: Install dependencies
         run: |
           python -m pip install -U pip
@@ -62,14 +62,26 @@ jobs:
           VERSION: ${{ steps.version.outputs.result }}
           NOTES: "${{ steps.body.outputs.result }}"
         run: |
-          echo "${NOTES}" | python -m logchange add "${VERSION}"
-          python -m logchange set unreleased -i ""
+          python -m logchange get unreleased | python -m logchange format > /tmp/notes
+          echo "$NOTES" | python -m logchange format > /tmp/notes
+          if [[ `newversion -i "${VERSION}" is_stable` ]]; then
+            python -m logchange set unreleased -i ""
+            cat /tmp/notes | python -m logchange add "${VERSION}"
+          else
+            cat /tmp/notes | python -m logchange set unreleased
+          fi
       - name: Bump version
         env:
           VERSION: ${{ steps.version.outputs.result }}
         run: |
+          # poetry: pyproject.toml
           test -f "pyproject.toml" && sed -i -E "s/^version\s*=\s*\".+/version = \"${VERSION}\"/" pyproject.toml
-          test -f "setup.cfg" && sed -i -E "s/^version \s*=\s*.+/version = ${VERSION}/" setup.cfg
+
+          # setuptools: setup.cfg
+          test -f "setup.cfg" && sed -i -E "s/^version \s*=\s*[0-9].+/version = ${VERSION}/" setup.cfg
+
+          # setuptools: setup.py
+          test -f "setup.py" && sed -i -E "s/^(\s*)version\s*=\s*.+/\1version=\"${VERSION}\",/" setup.py
       - name: Import GPG key
         id: import_gpg
         uses: crazy-max/ghaction-import-gpg@v3
@@ -78,7 +90,7 @@ jobs:
           git-user-signingkey: true
           git-commit-gpgsign: true
           git-push-gpgsign: true
-      - name: Commit changes
+      - name: Create release Pull Request
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.version.outputs.result }}
@@ -90,10 +102,3 @@ jobs:
           git add CHANGELOG.md
           git commit -m "Bump version to ${VERSION}"
           git push --set-upstream origin release/${VERSION}
-      - name: Publish to PyPI
-        env:
-          TWINE_USERNAME: "${{ secrets.PYPI_USERNAME }}"
-          TWINE_PASSWORD: "${{ secrets.PYPI_PASSWORD }}"
-        run: |
-          python setup.py build sdist bdist_wheel
-          twine upload  --non-interactive dist/*

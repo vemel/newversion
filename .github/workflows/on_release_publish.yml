@@ -57,16 +57,22 @@ jobs:
           TAG: ${{ steps.tag.outputs.result }}
         run: |
           VERSION=`echo ${TAG} | python -m newversion`
+          IS_STABLE=""
+          if [[ `echo ${VERSION} | newversion is_stable` ]]; then
+            IS_STABLE="true"
+          fi
           echo "${VERSION}"
+          echo "IS STABLE: ${IS_STABLE}"
           echo "::set-output name=result::${VERSION}"
+          echo "::set-output name=is-stable::${IS_STABLE}"
       - name: Update CHANGELOG.md
         env:
           VERSION: ${{ steps.version.outputs.result }}
+          IS_STABLE: ${{ steps.version.outputs.is-stable }}
           NOTES: "${{ steps.body.outputs.result }}"
         run: |
-          python -m logchange get unreleased | python -m logchange format > /tmp/notes
           echo "$NOTES" | python -m logchange format > /tmp/notes
-          if [[ `newversion -i "${VERSION}" is_stable` ]]; then
+          if [[ "${IS_STABLE}" == "" ]]; then
             python -m logchange set unreleased -i ""
             cat /tmp/notes | python -m logchange add "${VERSION}"
           else
@@ -122,3 +128,16 @@ jobs:
               body: process.env.NOTES,
             });
             console.log(response);
+      - name: Update Release
+        uses: actions/github-script@v3
+        env:
+          IS_STABLE: ${{ steps.version.outputs.is-stable }}
+        with:
+          script: |
+            const response = await github.repos.updateRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: context.payload.release.id,
+              prerelease: process.env.IS_STABLE !== "true",
+            });
+            console.log(response)

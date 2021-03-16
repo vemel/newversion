@@ -39,7 +39,7 @@ jobs:
         with:
           result-encoding: string
           script: return `github.com/${context.payload.repository.full_name}.git`;
-      - name: Get Repository default branch
+      - name: Get target branch
         id: branch
         uses: actions/github-script@v3
         with:
@@ -84,13 +84,13 @@ jobs:
           test -f "setup.py" && sed -i -E "s/^(\s*)version\s*=\s*.+/\1version=\"${VERSION}\",/" setup.py
       - name: Import GPG key
         id: import_gpg
+        if: secrets.BOT_GPG_SIGNING_KEY
         uses: crazy-max/ghaction-import-gpg@v3
         with:
           gpg-private-key: ${{ secrets.BOT_GPG_SIGNING_KEY }}
           git-user-signingkey: true
           git-commit-gpgsign: true
-          git-push-gpgsign: true
-      - name: Create release Pull Request
+      - name: Create and push release branch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.version.outputs.result }}
@@ -99,6 +99,22 @@ jobs:
           git checkout -b release/${VERSION}
           git add pyproject.toml
           git add setup.cfg
+          git add setup.py
           git add CHANGELOG.md
           git commit -m "Bump version to ${VERSION}"
           git push --set-upstream origin release/${VERSION}
+      - name: Create Release Pull Request
+        uses: actions/github-script@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.version.outputs.result }}
+          BRANCH: ${{ steps.branch.outputs.result }}
+        with:
+          script: |
+            const response = await github.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head: `release/${process.env.VERSION}`,
+              base: process.env.BRANCH,
+            });
+            console.log(response);

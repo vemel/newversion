@@ -110,6 +110,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.version.outputs.result }}
           BRANCH: ${{ steps.branch.outputs.result }}
+          NOTES: "${{ steps.body.outputs.result }}"
         with:
           script: |
             const response = await github.pulls.create({
@@ -117,5 +118,7 @@ jobs:
               repo: context.repo.repo,
               head: `release/${process.env.VERSION}`,
               base: process.env.BRANCH,
+              title: `Release ${process.env.VERSION}`,
+              body: process.env.NOTES,
             });
             console.log(response);

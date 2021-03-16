@@ -1,8 +1,10 @@
 name: Publish new release
 
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - "main"
+      - "release/*"
 
 jobs:
   publish-new-release:

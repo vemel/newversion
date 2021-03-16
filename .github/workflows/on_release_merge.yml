@@ -21,9 +21,7 @@ jobs:
         with:
           result-encoding: string
           script: |
-            console.log(github.event);
-            console.log(context);
-            const message = github.event.head_commit.message;
+            const message = context.payload.head_commit.message;
             if (!message.startsWith("Merge pull request "))
               return "";
             if (!message.contains("/release/"))

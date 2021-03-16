@@ -72,7 +72,7 @@ jobs:
           NOTES: "${{ steps.body.outputs.result }}"
         run: |
           echo "$NOTES" | python -m logchange format > /tmp/notes
-          if [[ "${IS_STABLE}" == "" ]]; then
+          if [[ "${IS_STABLE}" == "true" ]]; then
             python -m logchange set unreleased -i ""
             cat /tmp/notes | python -m logchange add "${VERSION}"
           else

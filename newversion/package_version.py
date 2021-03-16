@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Optional
 
 from newversion.constants import LOGGER_NAME
+from newversion.eol_fixer import EOLFixer
 from newversion.exceptions import PackageVersionError
 from newversion.utils import print_path
 from newversion.version import Version
@@ -54,6 +55,7 @@ class PackageVersion:
             return
 
         text = self._pyproject_path.read_text()
+        line_ending = EOLFixer.get_line_ending(text)
         lines = []
         changed = False
         for line in text.splitlines():
@@ -76,7 +78,8 @@ class PackageVersion:
             changed = True
 
         if changed:
-            self._pyproject_path.write_text("\n".join(lines))
+            text = EOLFixer.add_newline(line_ending.join(lines))
+            self._pyproject_path.write_text(text)
 
     def _get_from_setup_cfg(self) -> Optional[Version]:
         if not self._setup_cfg_path.exists():
@@ -89,8 +92,8 @@ class PackageVersion:
                 continue
 
             match = self.RE_SETUP_CFG_FILE.match(line)
-            version_path = self._path / Path(match.group(1))
             if match:
+                version_path = self._path / Path(match.group(1))
                 self._logger.debug(f"Getting version from {match.group(1)}")
                 return Version(version_path.read_text().strip())
 
@@ -107,6 +110,7 @@ class PackageVersion:
             return
 
         text = self._setup_cfg_path.read_text()
+        line_ending = EOLFixer.get_line_ending(text)
         lines = []
         changed = False
         for line in text.splitlines():
@@ -118,7 +122,7 @@ class PackageVersion:
             if match:
                 version_path = self._path / Path(match.group(1))
                 self._logger.info(f"Changing version in {match.group(1)} to {version.dumps()}")
-                version_path.write_text(f"{version.dumps()}\n")
+                version_path.write_text(f"{version.dumps()}{line_ending}")
                 return
 
             match = self.RE_SETUP_CFG.match(line)
@@ -136,7 +140,8 @@ class PackageVersion:
             changed = True
 
         if changed:
-            self._setup_cfg_path.write_text("\n".join(lines))
+            text = EOLFixer.add_newline(line_ending.join(lines))
+            self._setup_cfg_path.write_text(text)
 
     def _get_from_setup_py(self) -> Optional[Version]:
         if not self._setup_py_path.exists():
@@ -161,6 +166,7 @@ class PackageVersion:
             return
 
         text = self._setup_py_path.read_text()
+        line_ending = EOLFixer.get_line_ending(text)
         lines = []
         changed = False
         for line in text.splitlines():
@@ -183,7 +189,8 @@ class PackageVersion:
             changed = True
 
         if changed:
-            self._setup_py_path.write_text("\n".join(lines))
+            text = EOLFixer.add_newline(line_ending.join(lines))
+            self._setup_py_path.write_text(text)
 
     def get(self) -> Version:
         result = self._get_from_pyproject()

@@ -26,7 +26,7 @@ jobs:
               return "";
             if (!message.contains("/release/"))
               return "";
-            const branchName = "release/" + message.split("/release/").pop()
+            const branchName = "release/" + message.split("/release/").pop();
             console.log(branchName);
             return branchName;
       - name: Checkout release branch

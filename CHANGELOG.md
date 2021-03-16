@@ -6,6 +6,9 @@ and this project adheres to
 [PEP 440 -- Version Identification and Dependency Specification](https://www.python.org/dev/peps/pep-0440/).
 
 ## [Unreleased]
+### Added
+- `[cli]` `package` command to get Python package version
+- `[cli]` `set_package` command to set Python package version
 
 ## [1.7.0] - 2021-03-15
 

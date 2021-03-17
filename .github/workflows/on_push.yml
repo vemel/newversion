@@ -1,4 +1,4 @@
-name: Code style and test
+name: Code style & unit tests
 
 on:
   push:
@@ -9,7 +9,6 @@ on:
 
 jobs:
   unit-tests:
-    name: Code style & unit tests
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4

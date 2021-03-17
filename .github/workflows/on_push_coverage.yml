@@ -26,5 +26,5 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: |
-          pytest --cov-report term --cov newversion
+          pytest --cov-report term --cov
           codecov

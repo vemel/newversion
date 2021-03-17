@@ -37,7 +37,7 @@ class Executor:
             Part as a string.
         """
         if release == VersionParts.LOCAL:
-            return self._input.local[0] if self._input.local else ""
+            return self._input.local if self._input.local else ""
 
         if release == VersionParts.PRE:
             return f"{self._input.pre[0]}{self._input.pre[1]}" if self._input.pre else ""

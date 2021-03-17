@@ -57,11 +57,14 @@ exclude_lines = [
     "if __name__ == .__main__.:",
     "if TYPE_CHECKING:",
     "@overload",
+    "if sys.version_info",
 ]
 ignore_errors = true
 omit = [
+    ".venv/*",
     "tests/*",
 ]
+
 [tool.isort]
 profile = "black"
 line_length = 100

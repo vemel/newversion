@@ -1,5 +1,9 @@
+from unittest.mock import patch
+
 import pytest
+from newversion.exceptions import ExecutorError, PackageVersionError
 from newversion.executor import Executor, ExecutorError
+from newversion.package_version import PackageVersion
 from newversion.version import Version
 
 
@@ -19,6 +23,7 @@ class TestVersion:
         assert Executor(Version("1.2.3b5")).command_get("beta") == "5"
         assert Executor(Version("1.2.3.post7")).command_get("post") == "7"
         assert Executor(Version("1234!1.2.3.post7")).command_get("epoch") == "1234"
+        assert Executor(Version("1234!1.2.3.post7+localver")).command_get("local") == "localver"
 
     def test_command_stable(self):
         assert Executor(Version("1.2.3a4")).command_stable() == Version("1.2.3")
@@ -47,7 +52,13 @@ class TestVersion:
         assert Executor(Version("1.2.3")).command_set("minor", 3) == Version("1.3.3")
         assert Executor(Version("1.2.3")).command_set("micro", 4) == Version("1.2.4")
         assert Executor(Version("1.2.3")).command_set("pre", 4) == Version("1.2.3rc4")
+        assert Executor(Version("1.2.3rc2")).command_set("pre", 4) == Version("1.2.3rc4")
+        assert Executor(Version("1.2.3a2")).command_set("pre", 4) == Version("1.2.3a4")
+        assert Executor(Version("1.2.3b2")).command_set("pre", 4) == Version("1.2.3b4")
         assert Executor(Version("1.2.3")).command_set("epoch", 1234) == Version("1234!1.2.3")
+        assert Executor(Version("1.2.3")).command_set("alpha", 4) == Version("1.2.3a4")
+        assert Executor(Version("1.2.3")).command_set("beta", 4) == Version("1.2.3b4")
+        assert Executor(Version("1.2.3")).command_set("rc", 4) == Version("1.2.3rc4")
 
     def test_command_bump(self):
         assert Executor(Version("1.2.3")).command_bump("major", 3) == Version("4.0.0")
@@ -61,3 +72,20 @@ class TestVersion:
         assert Executor(Version("1.2.3.post5")).command_bump("post", 1) == Version("1.2.3.post6")
         with pytest.raises(ExecutorError):
             Executor(Version("1.2.3.post5")).command_bump("unknown", 1)
+
+    def test_command_get_version(self):
+        with patch.object(PackageVersion, "get") as get_mock:
+            get_mock.return_value = "test"
+            assert Executor(Version("1.2.3")).command_get_version() == "test"
+            get_mock.assert_called_with()
+            get_mock.side_effect = PackageVersionError
+            with pytest.raises(ExecutorError):
+                Executor(Version("1.2.3")).command_get_version()
+
+    def test_command_set_version(self):
+        with patch.object(PackageVersion, "set") as set_mock:
+            assert Executor(Version("1.2.3")).command_set_version() is None
+            set_mock.assert_called_with(Version("1.2.3"))
+            set_mock.side_effect = PackageVersionError
+            with pytest.raises(ExecutorError):
+                Executor(Version("1.2.3")).command_set_version()

@@ -82,14 +82,7 @@ jobs:
         env:
           VERSION: ${{ steps.version.outputs.result }}
         run: |
-          # poetry: pyproject.toml
-          test -f "pyproject.toml" && sed -i -E "s/^version\s*=\s*\".+/version = \"${VERSION}\"/" pyproject.toml
-
-          # setuptools: setup.cfg
-          test -f "setup.cfg" && sed -i -E "s/^version \s*=\s*[0-9].+/version = ${VERSION}/" setup.cfg
-
-          # setuptools: setup.py
-          test -f "setup.py" && sed -i -E "s/^(\s*)version\s*=\s*.+/\1version=\"${VERSION}\",/" setup.py
+          echo "$VERSION" | python -m newversion set_package
       - name: Import GPG key
         if: ${{ env.BOT_GPG_SIGNING_KEY != 0 }}
         uses: crazy-max/ghaction-import-gpg@v3

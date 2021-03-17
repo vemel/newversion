@@ -34,7 +34,7 @@ jobs:
           npm install pyright
       - name: Lint
         run: |
-          flake8 newversion
+          flake8
           npx pyright
       - name: Test
         env:

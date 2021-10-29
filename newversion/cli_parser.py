@@ -132,11 +132,11 @@ def parse_args(args: Sequence[str]) -> argparse.Namespace:
 
     subparsers.add_parser(
         Commands.PACKAGE,
-        help="Get Python package version. Supports pyproject.toml, setup.cfg nad setup.py.",
+        help="Get Python package version. Supports pyproject.toml, setup.cfg and setup.py.",
     )
     subparsers.add_parser(
         Commands.SET_PACKAGE,
-        help="Set Python package version. Supports pyproject.toml, setup.cfg nad setup.py.",
+        help="Set Python package version. Supports pyproject.toml, setup.cfg and setup.py.",
     )
 
     parser_lt = subparsers.add_parser(

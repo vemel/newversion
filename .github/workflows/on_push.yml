@@ -14,10 +14,11 @@ jobs:
       max-parallel: 4
       matrix:
         python-version:
-          - 3.6
-          - 3.7
-          - 3.8
-          - 3.9
+          - "3.6"
+          - "3.7"
+          - "3.8"
+          - "3.9"
+          - "3.10"
 
     steps:
       - uses: actions/checkout@v2
@@ -30,13 +31,17 @@ jobs:
           python -m pip install -U poetry pip wheel
           python -m poetry config virtualenvs.create false
           python -m poetry install -n
-          npm install pyright
+          sudo npm install -g pyright
+      - name: Code style
+        run: |
+          python -m black --check newversion
+          python -m isort -c newversion
       - name: Lint
         run: |
-          flake8
+          python -m flake8
+      - name: Typing
+        run: |
           npx pyright
       - name: Test
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: |
-          pytest
+          python -m pytest

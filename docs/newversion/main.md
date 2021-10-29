@@ -1,25 +1,15 @@
 # Main
 
-> Auto-generated documentation for [newversion.main](https://github.com/vemel/newversion/blob/main/newversion/main.py) module.
+> Auto-generated documentation for [newversion.main](https://github.com/vemel/newversion//blob/main/newversion/main.py) module.
 
 - [newversion](../README.md#newversion---your-version-manager) / [Modules](../MODULES.md#newversion-modules) / [Newversion](index.md#newversion) / Main
-    - [CLIError](#clierror)
     - [main_api](#main_api)
     - [main_cli](#main_cli)
-
-## CLIError
-
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/main.py#L8)
-
-```python
-class CLIError(Exception):
-```
-
-Main CLI error
+    - [setup_logging](#setup_logging)
 
 ## main_api
 
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/main.py#L14)
+[[find in source code]](https://github.com/vemel/newversion//blob/main/newversion/main.py#L24)
 
 ```python
 def main_api(config: argparse.Namespace) -> str:
@@ -29,10 +19,20 @@ Main API entrypoint.
 
 ## main_cli
 
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/main.py#L25)
+[[find in source code]](https://github.com/vemel/newversion//blob/main/newversion/main.py#L55)
 
 ```python
 def main_cli() -> None:
 ```
 
 Main entrypoint for CLI.
+
+## setup_logging
+
+[[find in source code]](https://github.com/vemel/newversion//blob/main/newversion/main.py#L11)
+
+```python
+def setup_logging(level: int) -> logging.Logger:
+```
+
+Setup logging for CLI usage.

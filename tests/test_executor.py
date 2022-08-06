@@ -23,6 +23,7 @@ class TestVersion:
         assert Executor(Version("1.2.3a4")).command_get("alpha") == "4"
         assert Executor(Version("1.2.3b5")).command_get("beta") == "5"
         assert Executor(Version("1.2.3.post7")).command_get("post") == "7"
+        assert Executor(Version("1.2.3.post6.dev2")).command_get("dev") == "2"
         assert Executor(Version("1234!1.2.3.post7")).command_get("epoch") == "1234"
         assert Executor(Version("1234!1.2.3.post7+localver")).command_get("local") == "localver"
 
@@ -41,6 +42,7 @@ class TestVersion:
 
     def test_command_compare(self):
         assert Executor(Version("1.2.3")).command_compare("lt", Version("1.3.0")) is None
+        assert Executor(Version("1.3.0.dev3")).command_compare("lt", Version("1.3.0")) is None
         assert Executor(Version("1.2.3")).command_compare("lte", Version("1.3.0")) is None
         assert Executor(Version("1.2.3")).command_compare("gt", Version("1.2.0")) is None
         assert Executor(Version("1.2.3")).command_compare("gte", Version("1.2.3")) is None
@@ -60,6 +62,8 @@ class TestVersion:
         assert Executor(Version("1.2.3")).command_set("alpha", 4) == Version("1.2.3a4")
         assert Executor(Version("1.2.3")).command_set("beta", 4) == Version("1.2.3b4")
         assert Executor(Version("1.2.3")).command_set("rc", 4) == Version("1.2.3rc4")
+        assert Executor(Version("1.2.3")).command_set("post", 5) == Version("1.2.3.post5")
+        assert Executor(Version("1.2.3+local")).command_set("dev", 0) == Version("1.2.3.dev0+local")
 
     def test_command_bump(self):
         assert Executor(Version("1.2.3")).command_bump("major", 3) == Version("4.0.0")
@@ -71,6 +75,7 @@ class TestVersion:
         assert Executor(Version("1.2.3rc2")).command_bump("alpha", 3) == Version("1.2.4a3")
         assert Executor(Version("1.2.3")).command_bump("post", 1) == Version("1.2.3.post1")
         assert Executor(Version("1.2.3.post5")).command_bump("post", 1) == Version("1.2.3.post6")
+        assert Executor(Version("1.2.3")).command_bump("dev", 1) == Version("1.2.4.dev0")
         with pytest.raises(ExecutorError):
             Executor(Version("1.2.3.post5")).command_bump("unknown", 1)
 

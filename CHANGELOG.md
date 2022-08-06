@@ -6,6 +6,11 @@ and this project adheres to
 [PEP 440 -- Version Identification and Dependency Specification](https://www.python.org/dev/peps/pep-0440/).
 
 ## [Unreleased]
+### Changed
+- `[packaging]` updated dependencies (now `poetry install` works on Apple M1)
+
+### Fixed
+- `[cli]` fixed typo in `help` output
 
 ## [1.8.0] - 2021-03-16
 ### Added

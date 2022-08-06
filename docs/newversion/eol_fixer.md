@@ -1,6 +1,6 @@
 # EOLFixer
 
-> Auto-generated documentation for [newversion.eol_fixer](https://github.com/vemel/newversion//blob/main/newversion/eol_fixer.py) module.
+> Auto-generated documentation for [newversion.eol_fixer](https://github.com/vemel/newversion/blob/main/newversion/eol_fixer.py) module.
 
 Converter between Unix and WIndows line endings.
 
@@ -14,7 +14,7 @@ Converter between Unix and WIndows line endings.
 
 ## EOLFixer
 
-[[find in source code]](https://github.com/vemel/newversion//blob/main/newversion/eol_fixer.py#L6)
+[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/eol_fixer.py#L6)
 
 ```python
 class EOLFixer():
@@ -24,7 +24,7 @@ Converter between Unix and WIndows line endings.
 
 ### EOLFixer.add_newline
 
-[[find in source code]](https://github.com/vemel/newversion//blob/main/newversion/eol_fixer.py#L63)
+[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/eol_fixer.py#L63)
 
 ```python
 @classmethod
@@ -35,7 +35,7 @@ Add newline character to the end if it is missing.
 
 ### EOLFixer.get_line_ending
 
-[[find in source code]](https://github.com/vemel/newversion//blob/main/newversion/eol_fixer.py#L56)
+[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/eol_fixer.py#L56)
 
 ```python
 @classmethod
@@ -46,7 +46,7 @@ Get line ending character.
 
 ### EOLFixer.is_crlf
 
-[[find in source code]](https://github.com/vemel/newversion//blob/main/newversion/eol_fixer.py#L14)
+[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/eol_fixer.py#L14)
 
 ```python
 @classmethod
@@ -61,7 +61,7 @@ Arguments:
 
 ### EOLFixer.to_crlf
 
-[[find in source code]](https://github.com/vemel/newversion//blob/main/newversion/eol_fixer.py#L40)
+[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/eol_fixer.py#L40)
 
 ```python
 @classmethod
@@ -80,7 +80,7 @@ Returns:
 
 ### EOLFixer.to_lf
 
-[[find in source code]](https://github.com/vemel/newversion//blob/main/newversion/eol_fixer.py#L24)
+[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/eol_fixer.py#L24)
 
 ```python
 @classmethod

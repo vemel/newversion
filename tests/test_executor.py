@@ -1,6 +1,7 @@
 from unittest.mock import patch
 
 import pytest
+
 from newversion.exceptions import ExecutorError, PackageVersionError
 from newversion.executor import Executor, ExecutorError
 from newversion.package_version import PackageVersion

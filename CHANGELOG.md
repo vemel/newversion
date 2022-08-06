@@ -8,12 +8,14 @@ and this project adheres to
 ## [Unreleased]
 ### Added
 - `[api]` added `bump_dev()` functionality and tests
+- `[cli]` added support for `dev` in `bump`, `get`, and `set` along with tests
 
 ### Changed
 - `[packaging]` updated dependencies (now `poetry install` works on Apple M1)
 
 ### Fixed
 - `[cli]` fixed typo in `help` output
+- `[api]` fixed typo in End of Line fixer
 
 ## [1.8.0] - 2021-03-16
 ### Added

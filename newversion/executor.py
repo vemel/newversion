@@ -45,6 +45,9 @@ class Executor:
         if release == VersionParts.POST:
             return str(self._input.post) if self._input.post else "0"
 
+        if release == VersionParts.DEV:
+            return str(self._input.dev) if self._input.dev else "0"
+
         if release == VersionParts.ALPHA:
             return (
                 str(self._input.pre[-1]) if self._input.pre and self._input.pre[0] == "a" else "0"
@@ -100,6 +103,9 @@ class Executor:
             or release == VersionParts.BETA
         ):
             return self._input.bump_prerelease(increment, release)
+
+        if release == VersionParts.DEV:
+            return self._input.bump_dev(increment)
 
         raise ExecutorError(f"Unknown release name: {release}")
 

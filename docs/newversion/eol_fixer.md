@@ -2,7 +2,7 @@
 
 > Auto-generated documentation for [newversion.eol_fixer](https://github.com/vemel/newversion/blob/main/newversion/eol_fixer.py) module.
 
-Converter between Unix and WIndows line endings.
+Converter between Unix and Windows line endings.
 
 - [newversion](../README.md#newversion---your-version-manager) / [Modules](../MODULES.md#newversion-modules) / [Newversion](index.md#newversion) / EOLFixer
     - [EOLFixer](#eolfixer)
@@ -20,7 +20,7 @@ Converter between Unix and WIndows line endings.
 class EOLFixer():
 ```
 
-Converter between Unix and WIndows line endings.
+Converter between Unix and Windows line endings.
 
 ### EOLFixer.add_newline
 

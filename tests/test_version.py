@@ -84,7 +84,7 @@ class TestVersion:
         assert Version("2.3.4.post2.dev4").bump_dev().dumps() == "2.3.4.post2.dev5"
         assert Version("1.2.3.dev0+mylocal").bump_dev().dumps() == "1.2.3.dev1+mylocal"
         # should not bump release/postrelease if we're already a dev release
-        assert Version("10.11.12.post3.dev2").bump_dev(1, "post").dumps() == "10.11.12.post3.dev3"
+        assert Version("1.2.3.post3.dev2").bump_dev(1, "post").dumps() == "1.2.3.post3.dev3"
         # this also tests correcting a missing `.` in a dev release
         assert Version("1.2.3dev4").bump_dev(1, "major").dumps() == "1.2.3.dev5"
         # this also tests correcting an incorrect beta `.`

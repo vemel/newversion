@@ -6,6 +6,9 @@ and this project adheres to
 [PEP 440 -- Version Identification and Dependency Specification](https://www.python.org/dev/peps/pep-0440/).
 
 ## [Unreleased]
+### Added
+- `[api]` added `bump_dev()` functionality and tests
+
 ### Changed
 - `[packaging]` updated dependencies (now `poetry install` works on Apple M1)
 

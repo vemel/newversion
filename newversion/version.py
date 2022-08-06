@@ -214,9 +214,9 @@ class Version(packaging.version.Version):
         )
 
     def bump_dev(
-            self: _R,
-            inc: int = 1,
-            bump_release: ReleaseMainTypeDef = VersionParts.MICRO,
+        self: _R,
+        inc: int = 1,
+        bump_release: ReleaseMainTypeDef = VersionParts.MICRO,
     ) -> _R:
         """
         Get next dev version.
@@ -245,7 +245,7 @@ class Version(packaging.version.Version):
         if self.is_devrelease:
             # this is a dev release already, increment the dev value
             return self.replace(dev=(self.dev + inc))
-        elif (self.is_stable and bump_release == 'post') or self.is_postrelease:
+        elif (self.is_stable and bump_release == "post") or self.is_postrelease:
             # this is a stable release and we want to create a new postrelease with dev
             return self.bump_postrelease().replace(dev=(inc - 1))
         elif self.is_stable:

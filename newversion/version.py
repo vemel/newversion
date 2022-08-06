@@ -221,7 +221,7 @@ class Version(packaging.version.Version):
         """
         Get next dev version.
         If version is stable - bump release for proper versioning as well.
-        Defaults to bumping `micro`
+        Defaults to bumping `micro`, falls back automatically to `post`
 
         Arguments:
             inc -- Increment for dev version.
@@ -245,14 +245,16 @@ class Version(packaging.version.Version):
         if self.is_devrelease:
             # this is a dev release already, increment the dev value
             return self.replace(dev=(self.dev + inc))
-        elif (self.is_stable and bump_release == "post") or self.is_postrelease:
+
+        if (self.is_stable and bump_release == "post") or self.is_postrelease:
             # this is a stable release and we want to create a new postrelease with dev
             return self.bump_postrelease().replace(dev=(inc - 1))
-        elif self.is_stable:
+
+        if self.is_stable:
             # this is a stable release and we want to bump the release and add dev
             return self.bump_release(bump_release).replace(dev=(inc - 1))
-        else:
-            return self.replace(dev=(inc - 1))
+
+        return self.replace(dev=(inc - 1))
 
     def bump_prerelease(
         self: _R,

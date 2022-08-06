@@ -116,3 +116,4 @@ class TestVersion:
         assert Version("1.2.3.dev3") < Version("1.2.3a1")
         assert Version("1.2.3.post3") > Version("1.2.3")
         assert Version("1.2.3.dev0") > Version("1.2.2")
+        assert Version("1.2.3.dev9") < Version("1.2.3")

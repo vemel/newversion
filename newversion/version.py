@@ -244,10 +244,11 @@ class Version(packaging.version.Version):
         """
         if self.is_devrelease:
             # this is a dev release already, increment the dev value
-            return self.replace(dev=(self.dev + inc))
+            dev_version = self.dev or 0
+            return self.replace(dev=(dev_version + inc))
 
         if (self.is_stable and bump_release == "post") or self.is_postrelease:
-            # this is a stable release and we want to create a new postrelease with dev
+            # this is a postrelease or we want to create one
             return self.bump_postrelease().replace(dev=(inc - 1))
 
         if self.is_stable:

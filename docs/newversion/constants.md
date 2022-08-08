@@ -1,6 +1,6 @@
 # Constants
 
-> Auto-generated documentation for [newversion.constants](https://github.com/findtopher/newversion/blob/main/newversion/constants.py) module.
+> Auto-generated documentation for [newversion.constants](https://github.com/vemel/newversion/blob/main/newversion/constants.py) module.
 
 Constants used in project.
 
@@ -10,7 +10,7 @@ Constants used in project.
 
 ## Commands
 
-[[find in source code]](https://github.com/findtopher/newversion/blob/main/newversion/constants.py#L26)
+[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/constants.py#L26)
 
 ```python
 class Commands():
@@ -20,7 +20,7 @@ CLI commands
 
 ## VersionParts
 
-[[find in source code]](https://github.com/findtopher/newversion/blob/main/newversion/constants.py#L8)
+[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/constants.py#L8)
 
 ```python
 class VersionParts():

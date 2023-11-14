@@ -19,6 +19,9 @@ jobs:
           - "3.10"
           - "3.11"
           - "3.12"
+        include:
+          - version: "3.11"
+            check-formatting: "true"
 
     steps:
       - uses: actions/checkout@v4
@@ -34,8 +37,14 @@ jobs:
         run: |
           python -m pip install -U poetry pip wheel
           python -m poetry install -n
-          sudo npm install -g pyright
+      - name: Install missing dependencies
+        run: |
+          poetry run pip install flake8 pytest
+      - name: Install Node.js dependencies
+        run: |
+          npm install -g pyright
       - name: Code style
+        if: ${{ matrix.check-formatting }}
         run: |
           poetry run black --check .
           poetry run isort -c .

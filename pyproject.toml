@@ -75,7 +75,7 @@ src_paths = []
 [tool.black]
 line-length = 100
 include = '(newversion|tests)/.*\.pyi?$'
-target-version = ['py38', 'py39', 'py310', 'py311']
+target-version = ['py38', 'py39', 'py310', 'py311', 'py312']
 
 [tool.pyright]
 include = ["newversion"]

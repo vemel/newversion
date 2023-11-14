@@ -11,7 +11,7 @@ Type Defs
 
 ## BaseVersion
 
-[Show source in type_defs.py:38](https://github.com/vemel/newversion/blob/main/newversion/type_defs.py#L38)
+[Show source in type_defs.py:39](https://github.com/vemel/newversion/blob/main/newversion/type_defs.py#L39)
 
 #### Signature
 

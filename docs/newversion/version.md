@@ -28,7 +28,7 @@ Version
 
 ## Version
 
-[Show source in version.py:25](https://github.com/vemel/newversion/blob/main/newversion/version.py#L25)
+[Show source in version.py:26](https://github.com/vemel/newversion/blob/main/newversion/version.py#L26)
 
 Extended `packaging.version.Version` implementation.
 
@@ -41,7 +41,7 @@ class Version(packaging.version.Version):
 
 ### Version().base
 
-[Show source in version.py:64](https://github.com/vemel/newversion/blob/main/newversion/version.py#L64)
+[Show source in version.py:65](https://github.com/vemel/newversion/blob/main/newversion/version.py#L65)
 
 Underlying version NamedTuple.
 
@@ -58,7 +58,7 @@ def base(self) -> BaseVersion: ...
 
 ### Version().base
 
-[Show source in version.py:71](https://github.com/vemel/newversion/blob/main/newversion/version.py#L71)
+[Show source in version.py:72](https://github.com/vemel/newversion/blob/main/newversion/version.py#L72)
 
 #### Signature
 
@@ -73,7 +73,7 @@ def base(self, base: BaseVersion) -> None: ...
 
 ### Version().bump_dev
 
-[Show source in version.py:220](https://github.com/vemel/newversion/blob/main/newversion/version.py#L220)
+[Show source in version.py:221](https://github.com/vemel/newversion/blob/main/newversion/version.py#L221)
 
 Get next dev version.
 If version is stable - bump release for proper versioning as well.
@@ -104,17 +104,17 @@ A new copy.
 
 ```python
 def bump_dev(
-    self: _R, inc: int = 1, bump_release: ReleaseMainTypeDef = "micro"
+    self: _R, inc: int = 1, bump_release: ReleaseMainPostTypeDef = "micro"
 ) -> _R: ...
 ```
 
 #### See also
 
-- [ReleaseMainTypeDef](./type_defs.md#releasemaintypedef)
+- [ReleaseMainPostTypeDef](./type_defs.md#releasemainposttypedef)
 
 ### Version().bump_major
 
-[Show source in version.py:116](https://github.com/vemel/newversion/blob/main/newversion/version.py#L116)
+[Show source in version.py:117](https://github.com/vemel/newversion/blob/main/newversion/version.py#L117)
 
 Get next major version.
 
@@ -144,7 +144,7 @@ def bump_major(self: _R, inc: int = 1) -> _R: ...
 
 ### Version().bump_micro
 
-[Show source in version.py:186](https://github.com/vemel/newversion/blob/main/newversion/version.py#L186)
+[Show source in version.py:187](https://github.com/vemel/newversion/blob/main/newversion/version.py#L187)
 
 Get next micro version.
 
@@ -174,7 +174,7 @@ def bump_micro(self: _R, inc: int = 1) -> _R: ...
 
 ### Version().bump_minor
 
-[Show source in version.py:150](https://github.com/vemel/newversion/blob/main/newversion/version.py#L150)
+[Show source in version.py:151](https://github.com/vemel/newversion/blob/main/newversion/version.py#L151)
 
 Get next minor version.
 
@@ -206,7 +206,7 @@ def bump_minor(self: _R, inc: int = 1) -> _R: ...
 
 ### Version().bump_postrelease
 
-[Show source in version.py:315](https://github.com/vemel/newversion/blob/main/newversion/version.py#L315)
+[Show source in version.py:316](https://github.com/vemel/newversion/blob/main/newversion/version.py#L316)
 
 Get next postrelease version.
 
@@ -235,7 +235,7 @@ def bump_postrelease(self: _R, inc: int = 1) -> _R: ...
 
 ### Version().bump_prerelease
 
-[Show source in version.py:264](https://github.com/vemel/newversion/blob/main/newversion/version.py#L264)
+[Show source in version.py:265](https://github.com/vemel/newversion/blob/main/newversion/version.py#L265)
 
 Get next prerelease version.
 If version is stable - bump `micro` for proper versioning as well.
@@ -279,7 +279,7 @@ def bump_prerelease(
 
 ### Version().bump_release
 
-[Show source in version.py:86](https://github.com/vemel/newversion/blob/main/newversion/version.py#L86)
+[Show source in version.py:87](https://github.com/vemel/newversion/blob/main/newversion/version.py#L87)
 
 Get next release version.
 
@@ -314,7 +314,7 @@ def bump_release(
 
 ### Version().copy
 
-[Show source in version.py:75](https://github.com/vemel/newversion/blob/main/newversion/version.py#L75)
+[Show source in version.py:76](https://github.com/vemel/newversion/blob/main/newversion/version.py#L76)
 
 Create a copy of a current version instance.
 
@@ -326,7 +326,7 @@ def copy(self: _R) -> _R: ...
 
 ### Version().dumps
 
-[Show source in version.py:43](https://github.com/vemel/newversion/blob/main/newversion/version.py#L43)
+[Show source in version.py:44](https://github.com/vemel/newversion/blob/main/newversion/version.py#L44)
 
 Render to string.
 
@@ -338,7 +338,7 @@ def dumps(self) -> str: ...
 
 ### Version().get_stable
 
-[Show source in version.py:420](https://github.com/vemel/newversion/blob/main/newversion/version.py#L420)
+[Show source in version.py:421](https://github.com/vemel/newversion/blob/main/newversion/version.py#L421)
 
 Get stable version from pre- or post- release.
 
@@ -362,7 +362,7 @@ def get_stable(self: _R) -> _R: ...
 
 ### Version().is_stable
 
-[Show source in version.py:410](https://github.com/vemel/newversion/blob/main/newversion/version.py#L410)
+[Show source in version.py:411](https://github.com/vemel/newversion/blob/main/newversion/version.py#L411)
 
 Whether version is not prerelease or devrelease.
 
@@ -379,7 +379,7 @@ def is_stable(self) -> bool: ...
 
 ### Version().prerelease_type
 
-[Show source in version.py:49](https://github.com/vemel/newversion/blob/main/newversion/version.py#L49)
+[Show source in version.py:50](https://github.com/vemel/newversion/blob/main/newversion/version.py#L50)
 
 #### Signature
 
@@ -394,7 +394,7 @@ def prerelease_type(self) -> Optional[PrereleaseTypeDef]: ...
 
 ### Version().replace
 
-[Show source in version.py:348](https://github.com/vemel/newversion/blob/main/newversion/version.py#L348)
+[Show source in version.py:349](https://github.com/vemel/newversion/blob/main/newversion/version.py#L349)
 
 Modify version parts.
 
@@ -442,7 +442,7 @@ def replace(
 
 ### Version.zero
 
-[Show source in version.py:36](https://github.com/vemel/newversion/blob/main/newversion/version.py#L36)
+[Show source in version.py:37](https://github.com/vemel/newversion/blob/main/newversion/version.py#L37)
 
 Get zero version `0.0.0`
 
@@ -457,7 +457,7 @@ def zero(cls: Type[_R]) -> _R: ...
 
 ## VersionError
 
-[Show source in version.py:19](https://github.com/vemel/newversion/blob/main/newversion/version.py#L19)
+[Show source in version.py:20](https://github.com/vemel/newversion/blob/main/newversion/version.py#L20)
 
 Wrapper for InvalidVersion error.
 

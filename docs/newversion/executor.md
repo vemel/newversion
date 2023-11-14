@@ -62,7 +62,7 @@ def command_bump(self, release: ReleaseNonLocalTypeDef, increment: int) -> Versi
 
 ### Executor().command_compare
 
-[Show source in executor.py:172](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L172)
+[Show source in executor.py:174](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L174)
 
 Execute compare command.
 
@@ -112,7 +112,7 @@ def command_get(self, release: ReleaseTypeDef) -> str: ...
 
 ### Executor().command_get_version
 
-[Show source in executor.py:195](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L195)
+[Show source in executor.py:197](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L197)
 
 #### Signature
 
@@ -126,7 +126,7 @@ def command_get_version(self) -> Version: ...
 
 ### Executor().command_is_stable
 
-[Show source in executor.py:162](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L162)
+[Show source in executor.py:164](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L164)
 
 Check whether version is stable.
 
@@ -168,7 +168,7 @@ def command_set(self, release: ReleaseNonLocalTypeDef, value: int) -> Version: .
 
 ### Executor().command_set_version
 
-[Show source in executor.py:201](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L201)
+[Show source in executor.py:203](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L203)
 
 #### Signature
 
@@ -178,7 +178,7 @@ def command_set_version(self) -> None: ...
 
 ### Executor().command_stable
 
-[Show source in executor.py:153](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L153)
+[Show source in executor.py:155](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L155)
 
 Get stable non-post, non-local version from current.
 

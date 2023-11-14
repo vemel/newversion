@@ -4,9 +4,10 @@ on:
   push:
     branches:
       - main
-    paths:
-      - newversion/**
-      - tests/**
+    paths-ignore:
+      - pyproject.toml
+      - setup.cfg
+      - CHANGELOG.md
 
 jobs:
   unit-tests-coverage:

@@ -28,7 +28,7 @@ jobs:
               return context.payload.inputs.version
             }
             return context.ref.split('/').pop()
-      - name: Install builder
+      - name: Install dependencies
         run: |
           python -m pip install -U poetry pip wheel
           poetry config virtualenvs.create false

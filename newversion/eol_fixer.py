@@ -1,11 +1,11 @@
 """
-Converter between Unix and WIndows line endings.
+Converter between Unix and Windows line endings.
 """
 
 
 class EOLFixer:
     """
-    Converter between Unix and WIndows line endings.
+    Converter between Unix and Windows line endings.
     """
 
     CRLF = "\r\n"

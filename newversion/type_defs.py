@@ -12,6 +12,7 @@ ReleaseTypeDef = Literal[
     "local",
     "pre",
     "post",
+    "dev",
     "alpha",
     "beta",
     "rc",
@@ -24,6 +25,7 @@ ReleaseNonLocalTypeDef = Literal[
     "micro",
     "pre",
     "post",
+    "dev",
     "alpha",
     "beta",
     "rc",
@@ -35,4 +37,4 @@ ReleaseMainTypeDef = Literal["major", "minor", "micro"]
 OperatorTypeDef = Literal["lt", "lte", "gt", "gte", "eq", "ne"]
 
 PrereleaseTypeDef = Literal["rc", "alpha", "beta"]
-PrereleaseLooseTypeDef = Literal["rc", "alpha", "beta", "a", "b"]
+PrereleaseLooseTypeDef = Literal["rc", "alpha", "beta", "a", "b", "c", None]

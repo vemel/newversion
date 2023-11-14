@@ -213,6 +213,50 @@ class Version(packaging.version.Version):
             )
         )
 
+    def bump_dev(
+        self: _R,
+        inc: int = 1,
+        bump_release: ReleaseMainTypeDef = VersionParts.MICRO,
+    ) -> _R:
+        """
+        Get next dev version.
+        If version is stable - bump release for proper versioning as well.
+        Defaults to bumping `micro`, falls back automatically to `post`
+
+        Arguments:
+            inc -- Increment for dev version.
+            bump_release -- Release number to bump if version is stable.
+
+        Examples:
+
+            ```python
+            Version("1.2.3").bump_dev()  # "1.2.4.dev0"
+            Version("1.2.3").bump_dev(1, 'minor')  # "1.3.0.dev0"
+            Version("1.2.3.dev14").bump_dev()  # "1.2.3.dev15"
+            Version("1.2.3a4).bump_dev()  # "1.2.3a4.dev0"
+            Version("1.2.3b5.dev9").bump_dev()  # "1.2.3b5.dev10"
+            Version("1.2.3.dev3").bump_dev(2)  # "1.2.3.dev5"
+            Version("1.2.3.post4").bump_dev()  # "1.2.3.post5.dev0"
+            ```
+
+        Returns:
+            A new copy.
+        """
+        if self.is_devrelease:
+            # this is a dev release already, increment the dev value
+            dev_version = self.dev or 0
+            return self.replace(dev=(dev_version + inc))
+
+        if (self.is_stable and bump_release == "post") or self.is_postrelease:
+            # this is a postrelease or we want to create one
+            return self.bump_postrelease().replace(dev=(inc - 1))
+
+        if self.is_stable:
+            # this is a stable release and we want to bump the release and add dev
+            return self.bump_release(bump_release).replace(dev=(inc - 1))
+
+        return self.replace(dev=(inc - 1))
+
     def bump_prerelease(
         self: _R,
         inc: int = 1,
@@ -221,7 +265,7 @@ class Version(packaging.version.Version):
     ) -> _R:
         """
         Get next prerelease version.
-        If version is stable - bump `micro` for a proper versioning as well.
+        If version is stable - bump `micro` for proper versioning as well.
         Defaults to `rc` pre-releases.
 
         Arguments:

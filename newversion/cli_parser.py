@@ -68,6 +68,7 @@ def parse_args(args: Sequence[str]) -> argparse.Namespace:
             VersionParts.RC,
             VersionParts.ALPHA,
             VersionParts.BETA,
+            VersionParts.DEV,
         ],
         nargs="?",
         default="micro",

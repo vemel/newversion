@@ -1,6 +1,6 @@
 # PackageVersion
 
-> Auto-generated documentation for [newversion.package_version](https://github.com/vemel/newversion//blob/main/newversion/package_version.py) module.
+> Auto-generated documentation for [newversion.package_version](https://github.com/vemel/newversion/blob/main/newversion/package_version.py) module.
 
 - [newversion](../README.md#newversion---your-version-manager) / [Modules](../MODULES.md#newversion-modules) / [Newversion](index.md#newversion) / PackageVersion
     - [PackageVersion](#packageversion)
@@ -9,7 +9,7 @@
 
 ## PackageVersion
 
-[[find in source code]](https://github.com/vemel/newversion//blob/main/newversion/package_version.py#L13)
+[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/package_version.py#L13)
 
 ```python
 class PackageVersion():
@@ -18,7 +18,7 @@ class PackageVersion():
 
 ### PackageVersion().get
 
-[[find in source code]](https://github.com/vemel/newversion//blob/main/newversion/package_version.py#L195)
+[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/package_version.py#L195)
 
 ```python
 def get() -> Version:
@@ -30,7 +30,7 @@ def get() -> Version:
 
 ### PackageVersion().set
 
-[[find in source code]](https://github.com/vemel/newversion//blob/main/newversion/package_version.py#L208)
+[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/package_version.py#L208)
 
 ```python
 def set(version: Version) -> None:

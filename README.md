@@ -1,4 +1,4 @@
-# NewVersion - Your version manager
+# NewVersion - PEP 440 version manager
 
 [![PyPI - newversion](https://img.shields.io/pypi/v/newversion.svg?color=blue&label=newversion)](https://pypi.org/project/newversion)
 [![Docs](https://img.shields.io/readthedocs/newversion.svg?color=blue&label=Builder%20docs)](https://newversion.readthedocs.io/)

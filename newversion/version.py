@@ -1,13 +1,18 @@
 """
 Extended `packaging.version.Version` implementation.
 """
-from typing import Any, Dict, Optional, Tuple, Type, TypeVar
+from typing import Any, Dict, Optional, Tuple, Type, TypeVar, Union
 
 import packaging.version
-from packaging.version import _Version as BaseVersion
 
 from newversion.constants import VersionParts
-from newversion.type_defs import PrereleaseLooseTypeDef, PrereleaseTypeDef, ReleaseMainTypeDef
+from newversion.type_defs import (
+    BaseVersion,
+    PrereleaseLooseTypeDef,
+    PrereleaseTypeDef,
+    ReleaseMainPostTypeDef,
+    ReleaseMainTypeDef,
+)
 
 _R = TypeVar("_R", bound="Version")
 
@@ -81,7 +86,7 @@ class Version(packaging.version.Version):
 
     def bump_release(
         self: _R,
-        release_type: ReleaseMainTypeDef = VersionParts.MICRO,
+        release_type: ReleaseMainTypeDef = "micro",
         inc: int = 1,
     ) -> _R:
         """
@@ -216,7 +221,7 @@ class Version(packaging.version.Version):
     def bump_dev(
         self: _R,
         inc: int = 1,
-        bump_release: ReleaseMainTypeDef = VersionParts.MICRO,
+        bump_release: ReleaseMainPostTypeDef = "micro",
     ) -> _R:
         """
         Get next dev version.
@@ -247,7 +252,7 @@ class Version(packaging.version.Version):
             dev_version = self.dev or 0
             return self.replace(dev=(dev_version + inc))
 
-        if (self.is_stable and bump_release == "post") or self.is_postrelease:
+        if bump_release == "post" or self.is_postrelease:
             # this is a postrelease or we want to create one
             return self.bump_postrelease().replace(dev=(inc - 1))
 
@@ -260,8 +265,8 @@ class Version(packaging.version.Version):
     def bump_prerelease(
         self: _R,
         inc: int = 1,
-        release_type: PrereleaseLooseTypeDef = None,
-        bump_release: ReleaseMainTypeDef = VersionParts.MICRO,
+        release_type: Optional[PrereleaseLooseTypeDef] = None,
+        bump_release: ReleaseMainTypeDef = "micro",
     ) -> _R:
         """
         Get next prerelease version.
@@ -439,14 +444,21 @@ class Version(packaging.version.Version):
             )
         )
 
-    def _copy_base(self, **kwargs: Any) -> BaseVersion:
-        base_kwargs = dict(
-            epoch=self.base.epoch,
-            release=self.base.release,
-            pre=self.base.pre,
-            post=self.base.post,
-            dev=self.base.dev,
-            local=self.base.local,
+    def _copy_base(
+        self,
+        *,
+        epoch: Optional[int] = None,
+        release: Optional[Tuple[int, ...]] = None,
+        dev: Optional[Tuple[str, int]] = None,
+        pre: Optional[Tuple[str, int]] = None,
+        post: Optional[Tuple[str, int]] = None,
+        local: Optional[Tuple[Union[int, str], ...]] = None,
+    ) -> BaseVersion:
+        return BaseVersion(
+            epoch=epoch if epoch is not None else self.base.epoch,
+            release=release if release is not None else self.base.release,
+            pre=pre if pre is not None else self.base.pre,
+            post=post if post is not None else self.base.post,
+            dev=dev if dev is not None else self.base.dev,
+            local=local if local is not None else self.base.local,
         )
-        base_kwargs.update(kwargs)
-        return BaseVersion(**base_kwargs)

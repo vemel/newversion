@@ -1,57 +1,60 @@
 # EOLFixer
 
+[newversion Index](../README.md#newversion-index) /
+[Newversion](./index.md#newversion) /
+EOLFixer
+
 > Auto-generated documentation for [newversion.eol_fixer](https://github.com/vemel/newversion/blob/main/newversion/eol_fixer.py) module.
 
-Converter between Unix and Windows line endings.
-
-- [newversion](../README.md#newversion---your-version-manager) / [Modules](../MODULES.md#newversion-modules) / [Newversion](index.md#newversion) / EOLFixer
-    - [EOLFixer](#eolfixer)
-        - [EOLFixer.add_newline](#eolfixeradd_newline)
-        - [EOLFixer.get_line_ending](#eolfixerget_line_ending)
-        - [EOLFixer.is_crlf](#eolfixeris_crlf)
-        - [EOLFixer.to_crlf](#eolfixerto_crlf)
-        - [EOLFixer.to_lf](#eolfixerto_lf)
+- [EOLFixer](#eolfixer)
+  - [EOLFixer](#eolfixer-1)
+    - [EOLFixer.add_newline](#eolfixeradd_newline)
+    - [EOLFixer.get_line_ending](#eolfixerget_line_ending)
+    - [EOLFixer.is_crlf](#eolfixeris_crlf)
+    - [EOLFixer.to_crlf](#eolfixerto_crlf)
+    - [EOLFixer.to_lf](#eolfixerto_lf)
 
 ## EOLFixer
 
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/eol_fixer.py#L6)
-
-```python
-class EOLFixer():
-```
+[Show source in eol_fixer.py:6](https://github.com/vemel/newversion/blob/main/newversion/eol_fixer.py#L6)
 
 Converter between Unix and Windows line endings.
 
-### EOLFixer.add_newline
-
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/eol_fixer.py#L63)
+#### Signature
 
 ```python
-@classmethod
-def add_newline(text: str) -> str:
+class EOLFixer: ...
 ```
+
+### EOLFixer.add_newline
+
+[Show source in eol_fixer.py:63](https://github.com/vemel/newversion/blob/main/newversion/eol_fixer.py#L63)
 
 Add newline character to the end if it is missing.
 
-### EOLFixer.get_line_ending
-
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/eol_fixer.py#L56)
+#### Signature
 
 ```python
 @classmethod
-def get_line_ending(text: str) -> str:
+def add_newline(cls, text: str) -> str: ...
 ```
+
+### EOLFixer.get_line_ending
+
+[Show source in eol_fixer.py:56](https://github.com/vemel/newversion/blob/main/newversion/eol_fixer.py#L56)
 
 Get line ending character.
 
-### EOLFixer.is_crlf
-
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/eol_fixer.py#L14)
+#### Signature
 
 ```python
 @classmethod
-def is_crlf(text: str) -> bool:
+def get_line_ending(cls, text: str) -> str: ...
 ```
+
+### EOLFixer.is_crlf
+
+[Show source in eol_fixer.py:14](https://github.com/vemel/newversion/blob/main/newversion/eol_fixer.py#L14)
 
         Check whether text has `
 ` characters.
@@ -59,14 +62,16 @@ def is_crlf(text: str) -> bool:
 Arguments:
     text -- Text to check.
 
-### EOLFixer.to_crlf
-
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/eol_fixer.py#L40)
+#### Signature
 
 ```python
 @classmethod
-def to_crlf(text: str) -> str:
+def is_crlf(cls, text: str) -> bool: ...
 ```
+
+### EOLFixer.to_crlf
+
+[Show source in eol_fixer.py:40](https://github.com/vemel/newversion/blob/main/newversion/eol_fixer.py#L40)
 
         Convert `
 ` to `
@@ -77,15 +82,17 @@ Arguments:
 
 Returns:
     Converted text.
+
+#### Signature
+
+```python
+@classmethod
+def to_crlf(cls, text: str) -> str: ...
+```
 
 ### EOLFixer.to_lf
 
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/eol_fixer.py#L24)
-
-```python
-@classmethod
-def to_lf(text: str) -> str:
-```
+[Show source in eol_fixer.py:24](https://github.com/vemel/newversion/blob/main/newversion/eol_fixer.py#L24)
 
         Convert `
 ` to `
@@ -96,3 +103,10 @@ Arguments:
 
 Returns:
     Converted text.
+
+#### Signature
+
+```python
+@classmethod
+def to_lf(cls, text: str) -> str: ...
+```

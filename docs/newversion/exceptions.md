@@ -1,38 +1,52 @@
 # Exceptions
 
+[newversion Index](../README.md#newversion-index) /
+[Newversion](./index.md#newversion) /
+Exceptions
+
 > Auto-generated documentation for [newversion.exceptions](https://github.com/vemel/newversion/blob/main/newversion/exceptions.py) module.
 
-- [newversion](../README.md#newversion---your-version-manager) / [Modules](../MODULES.md#newversion-modules) / [Newversion](index.md#newversion) / Exceptions
-    - [CLIError](#clierror)
-    - [ExecutorError](#executorerror)
-    - [PackageVersionError](#packageversionerror)
+- [Exceptions](#exceptions)
+  - [CLIError](#clierror)
+  - [ExecutorError](#executorerror)
+  - [PackageVersionError](#packageversionerror)
 
 ## CLIError
 
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/exceptions.py#L13)
-
-```python
-class CLIError(Exception):
-```
+[Show source in exceptions.py:13](https://github.com/vemel/newversion/blob/main/newversion/exceptions.py#L13)
 
 Main CLI error
 
-## ExecutorError
-
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/exceptions.py#L7)
+#### Signature
 
 ```python
-class ExecutorError(Exception):
+class CLIError(Exception): ...
 ```
+
+
+
+## ExecutorError
+
+[Show source in exceptions.py:7](https://github.com/vemel/newversion/blob/main/newversion/exceptions.py#L7)
 
 Main CLI commands executor error.
 
-## PackageVersionError
-
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/exceptions.py#L1)
+#### Signature
 
 ```python
-class PackageVersionError(Exception):
+class ExecutorError(Exception): ...
 ```
 
+
+
+## PackageVersionError
+
+[Show source in exceptions.py:1](https://github.com/vemel/newversion/blob/main/newversion/exceptions.py#L1)
+
 Main PackageVersion error.
+
+#### Signature
+
+```python
+class PackageVersionError(Exception): ...
+```

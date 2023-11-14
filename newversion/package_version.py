@@ -1,7 +1,7 @@
 import logging
 import re
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional
 
 from newversion.constants import LOGGER_NAME
 from newversion.eol_fixer import EOLFixer
@@ -56,7 +56,7 @@ class PackageVersion:
 
         text = self._pyproject_path.read_text()
         line_ending = EOLFixer.get_line_ending(text)
-        lines = []
+        lines: List[str] = []
         changed = False
         for line in text.splitlines():
             if not line.startswith("version"):
@@ -111,7 +111,7 @@ class PackageVersion:
 
         text = self._setup_cfg_path.read_text()
         line_ending = EOLFixer.get_line_ending(text)
-        lines = []
+        lines: List[str] = []
         changed = False
         for line in text.splitlines():
             if not line.startswith("version"):
@@ -167,7 +167,7 @@ class PackageVersion:
 
         text = self._setup_py_path.read_text()
         line_ending = EOLFixer.get_line_ending(text)
-        lines = []
+        lines: List[str] = []
         changed = False
         for line in text.splitlines():
             if not line.lstrip().startswith("version"):

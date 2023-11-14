@@ -1,20 +1,18 @@
 # Cli Parser
 
+[newversion Index](../README.md#newversion-index) /
+[Newversion](./index.md#newversion) /
+Cli Parser
+
 > Auto-generated documentation for [newversion.cli_parser](https://github.com/vemel/newversion/blob/main/newversion/cli_parser.py) module.
 
-Main CLI parser.
-
-- [newversion](../README.md#newversion---your-version-manager) / [Modules](../MODULES.md#newversion-modules) / [Newversion](index.md#newversion) / Cli Parser
-    - [get_stdin](#get_stdin)
-    - [parse_args](#parse_args)
+- [Cli Parser](#cli-parser)
+  - [get_stdin](#get_stdin)
+  - [parse_args](#parse_args)
 
 ## get_stdin
 
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/cli_parser.py#L14)
-
-```python
-def get_stdin() -> Version:
-```
+[Show source in cli_parser.py:14](https://github.com/vemel/newversion/blob/main/newversion/cli_parser.py#L14)
 
 Get input from stdin.
 
@@ -22,20 +20,30 @@ Get input from stdin.
 
 Parsed version.
 
+#### Signature
+
+```python
+def get_stdin() -> Version: ...
+```
+
 #### See also
 
-- [Version](version.md#version)
+- [Version](./version.md#version)
+
+
 
 ## parse_args
 
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/cli_parser.py#L31)
-
-```python
-def parse_args(args: Sequence[str]) -> argparse.Namespace:
-```
+[Show source in cli_parser.py:31](https://github.com/vemel/newversion/blob/main/newversion/cli_parser.py#L31)
 
 Main CLI parser.
 
 #### Returns
 
 Argument parser Namespace.
+
+#### Signature
+
+```python
+def parse_args(args: Sequence[str]) -> argparse.Namespace: ...
+```

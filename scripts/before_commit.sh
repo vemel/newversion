@@ -4,10 +4,10 @@ set -e
 ROOT_PATH=$(dirname $(dirname $0))
 cd $ROOT_PATH
 
-black .
-isort .
-npx pyright
-pytest
-flake8 newversion
+poetry run black .
+poetry run isort .
+poetry run npx pyright
+poetry run pytest
+poetry run flake8 .
 
 ./scripts/docs.sh

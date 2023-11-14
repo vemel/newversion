@@ -13,24 +13,20 @@ classifiers = [
     "Natural Language :: English",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.6",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: Implementation :: CPython",
     "Typing :: Typed",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 keywords = ["version", "pep440"]
-packages = [
-    { include = "newversion" },
-]
-include = [
-    "LICENSE",
-    "newversion/py.typed",
-]
+packages = [{ include = "newversion" }]
+include = ["LICENSE", "newversion/py.typed"]
 
 [tool.poetry.scripts]
 newversion = 'newversion.main:main_cli'
@@ -41,19 +37,18 @@ newversion = 'newversion.main:main_cli'
 "Tracker" = "https://github.com/vemel/newversion/issues"
 
 [tool.poetry.dependencies]
-python = ">=3.6.10,<4.0.0"
+python = ">=3.8.0,<4.0.0"
 packaging = ">=20.0"
-typing-extensions = {version = ">=3.7.4", python = "<3.8"}
 
 [tool.poetry.dev-dependencies]
-black = "22.6.0"
-isort = "5.10.1"
-handsdown = "0.5.1"
-pytest = "7.0.1"
-flake8 = "5.0.4"
-pytest-cov = "3.0.0"
-codecov = "2.1.12"
-twine = "*"
+black = { version = "*", python = ">=3.11" }
+isort = { version = "*", python = ">=3.11" }
+handsdown = { version = "*", python = ">=3.11" }
+pytest = { version = "*", python = ">=3.11" }
+flake8 = { version = "*", python = ">=3.11" }
+pytest-cov = { version = "*", python = ">=3.11" }
+codecov = { version = "*", python = ">=3.11" }
+twine = { version = "*", python = ">=3.11" }
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -70,27 +65,27 @@ exclude_lines = [
     "if sys.version_info",
 ]
 ignore_errors = true
-omit = [
-    ".venv/*",
-    "tests/*",
-]
+omit = [".venv/*", "tests/*"]
 
 [tool.isort]
 profile = "black"
 line_length = 100
-known_first_party = [
-    "newversion",
-    "tests",
-]
+known_first_party = ["newversion", "tests"]
 src_paths = []
 
 [tool.black]
 line-length = 100
 include = '(newversion|tests)/.*\.pyi?$'
-target-version = [
-    'py36',
-    'py37',
-    'py38',
-    'py39',
-    'py310',
-]
+target-version = ['py38', 'py39', 'py310', 'py311']
+
+[tool.pyright]
+include = ["newversion"]
+exclude = ["**/__pycache__", "tests", "**/build", "typings"]
+pythonVersion = "3.8"
+typeCheckingMode = "strict"
+reportMissingImports = "error"
+reportMissingTypeStubs = "error"
+reportMissingTypeArgument = "error"
+reportIncompatibleMethodOverride = "error"
+reportIncompatibleVariableOverride = "error"
+reportUnknownParameterType = "error"

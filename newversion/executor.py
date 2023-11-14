@@ -4,6 +4,7 @@ CLI commands executor.
 
 import operator
 from pathlib import Path
+from typing import Optional
 
 from newversion.constants import VersionParts
 from newversion.exceptions import ExecutorError, PackageVersionError
@@ -19,9 +20,9 @@ class Executor:
 
     def __init__(
         self,
-        input: Version = Version.zero(),
+        input: Optional[Version] = None,
     ) -> None:
-        self._input = input
+        self._input = input if input is not None else Version.zero()
 
     def command_get(
         self,
@@ -130,8 +131,26 @@ class Executor:
 
             return self._input.replace(rc=value)
 
-        kwargs = {release: value}
-        return self._input.replace(**kwargs)
+        if release == VersionParts.POST:
+            return self._input.replace(post=value)
+        if release == VersionParts.EPOCH:
+            return self._input.replace(epoch=value)
+        if release == VersionParts.MAJOR:
+            return self._input.replace(major=value)
+        if release == VersionParts.MINOR:
+            return self._input.replace(minor=value)
+        if release == VersionParts.MICRO:
+            return self._input.replace(micro=value)
+        if release == VersionParts.ALPHA:
+            return self._input.replace(alpha=value)
+        if release == VersionParts.BETA:
+            return self._input.replace(beta=value)
+        if release == VersionParts.RC:
+            return self._input.replace(rc=value)
+        if release == VersionParts.DEV:
+            return self._input.replace(dev=value)
+
+        return self._input
 
     def command_stable(self) -> Version:
         """

@@ -1,41 +1,51 @@
 # PackageVersion
 
+[newversion Index](../README.md#newversion-index) /
+[Newversion](./index.md#newversion) /
+PackageVersion
+
 > Auto-generated documentation for [newversion.package_version](https://github.com/vemel/newversion/blob/main/newversion/package_version.py) module.
 
-- [newversion](../README.md#newversion---your-version-manager) / [Modules](../MODULES.md#newversion-modules) / [Newversion](index.md#newversion) / PackageVersion
-    - [PackageVersion](#packageversion)
-        - [PackageVersion().get](#packageversionget)
-        - [PackageVersion().set](#packageversionset)
+- [PackageVersion](#packageversion)
+  - [PackageVersion](#packageversion-1)
+    - [PackageVersion().get](#packageversion()get)
+    - [PackageVersion().set](#packageversion()set)
 
 ## PackageVersion
 
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/package_version.py#L13)
+[Show source in package_version.py:13](https://github.com/vemel/newversion/blob/main/newversion/package_version.py#L13)
+
+#### Signature
 
 ```python
-class PackageVersion():
-    def __init__(path: Path) -> None:
+class PackageVersion:
+    def __init__(self, path: Path) -> None: ...
 ```
 
 ### PackageVersion().get
 
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/package_version.py#L195)
+[Show source in package_version.py:195](https://github.com/vemel/newversion/blob/main/newversion/package_version.py#L195)
+
+#### Signature
 
 ```python
-def get() -> Version:
+def get(self) -> Version: ...
 ```
 
 #### See also
 
-- [Version](version.md#version)
+- [Version](./version.md#version)
 
 ### PackageVersion().set
 
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/package_version.py#L208)
+[Show source in package_version.py:208](https://github.com/vemel/newversion/blob/main/newversion/package_version.py#L208)
+
+#### Signature
 
 ```python
-def set(version: Version) -> None:
+def set(self, version: Version) -> None: ...
 ```
 
 #### See also
 
-- [Version](version.md#version)
+- [Version](./version.md#version)

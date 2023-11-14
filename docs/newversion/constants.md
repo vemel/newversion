@@ -1,29 +1,37 @@
 # Constants
 
+[newversion Index](../README.md#newversion-index) /
+[Newversion](./index.md#newversion) /
+Constants
+
 > Auto-generated documentation for [newversion.constants](https://github.com/vemel/newversion/blob/main/newversion/constants.py) module.
 
-Constants used in project.
-
-- [newversion](../README.md#newversion---your-version-manager) / [Modules](../MODULES.md#newversion-modules) / [Newversion](index.md#newversion) / Constants
-    - [Commands](#commands)
-    - [VersionParts](#versionparts)
+- [Constants](#constants)
+  - [Commands](#commands)
+  - [VersionParts](#versionparts)
 
 ## Commands
 
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/constants.py#L26)
-
-```python
-class Commands():
-```
+[Show source in constants.py:26](https://github.com/vemel/newversion/blob/main/newversion/constants.py#L26)
 
 CLI commands
 
-## VersionParts
-
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/constants.py#L8)
+#### Signature
 
 ```python
-class VersionParts():
+class Commands: ...
 ```
 
+
+
+## VersionParts
+
+[Show source in constants.py:8](https://github.com/vemel/newversion/blob/main/newversion/constants.py#L8)
+
 Utility class with constants for version parts.
+
+#### Signature
+
+```python
+class VersionParts: ...
+```

@@ -1,42 +1,42 @@
 # Executor
 
+[newversion Index](../README.md#newversion-index) /
+[Newversion](./index.md#newversion) /
+Executor
+
 > Auto-generated documentation for [newversion.executor](https://github.com/vemel/newversion/blob/main/newversion/executor.py) module.
 
-CLI commands executor.
-
-- [newversion](../README.md#newversion---your-version-manager) / [Modules](../MODULES.md#newversion-modules) / [Newversion](index.md#newversion) / Executor
-    - [Executor](#executor)
-        - [Executor().command_bump](#executorcommand_bump)
-        - [Executor().command_compare](#executorcommand_compare)
-        - [Executor().command_get](#executorcommand_get)
-        - [Executor().command_get_version](#executorcommand_get_version)
-        - [Executor().command_is_stable](#executorcommand_is_stable)
-        - [Executor().command_set](#executorcommand_set)
-        - [Executor().command_set_version](#executorcommand_set_version)
-        - [Executor().command_stable](#executorcommand_stable)
+- [Executor](#executor)
+  - [Executor](#executor-1)
+    - [Executor().command_bump](#executor()command_bump)
+    - [Executor().command_compare](#executor()command_compare)
+    - [Executor().command_get](#executor()command_get)
+    - [Executor().command_get_version](#executor()command_get_version)
+    - [Executor().command_is_stable](#executor()command_is_stable)
+    - [Executor().command_set](#executor()command_set)
+    - [Executor().command_set_version](#executor()command_set_version)
+    - [Executor().command_stable](#executor()command_stable)
 
 ## Executor
 
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L15)
-
-```python
-class Executor():
-    def __init__(input: Version = Version.zero()) -> None:
-```
+[Show source in executor.py:16](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L16)
 
 CLI commands executor.
 
+#### Signature
+
+```python
+class Executor:
+    def __init__(self, input: Optional[Version] = None) -> None: ...
+```
+
 #### See also
 
-- [Version](version.md#version)
+- [Version](./version.md#version)
 
 ### Executor().command_bump
 
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L76)
-
-```python
-def command_bump(release: ReleaseNonLocalTypeDef, increment: int) -> Version:
-```
+[Show source in executor.py:77](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L77)
 
 Bump release.
 
@@ -49,18 +49,20 @@ Bump release.
 
 A new Version.
 
+#### Signature
+
+```python
+def command_bump(self, release: ReleaseNonLocalTypeDef, increment: int) -> Version: ...
+```
+
 #### See also
 
-- [ReleaseNonLocalTypeDef](type_defs.md#releasenonlocaltypedef)
-- [Version](version.md#version)
+- [ReleaseNonLocalTypeDef](./type_defs.md#releasenonlocaltypedef)
+- [Version](./version.md#version)
 
 ### Executor().command_compare
 
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L155)
-
-```python
-def command_compare(command: OperatorTypeDef, other: Version) -> None:
-```
+[Show source in executor.py:172](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L172)
 
 Execute compare command.
 
@@ -73,18 +75,20 @@ Execute compare command.
 
 Processed `Version`.
 
+#### Signature
+
+```python
+def command_compare(self, command: OperatorTypeDef, other: Version) -> None: ...
+```
+
 #### See also
 
-- [OperatorTypeDef](type_defs.md#operatortypedef)
-- [Version](version.md#version)
+- [OperatorTypeDef](./type_defs.md#operatortypedef)
+- [Version](./version.md#version)
 
 ### Executor().command_get
 
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L26)
-
-```python
-def command_get(release: ReleaseTypeDef) -> str:
-```
+[Show source in executor.py:27](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L27)
 
 Get version part.
 
@@ -96,29 +100,33 @@ Get version part.
 
 Part as a string.
 
+#### Signature
+
+```python
+def command_get(self, release: ReleaseTypeDef) -> str: ...
+```
+
 #### See also
 
-- [ReleaseTypeDef](type_defs.md#releasetypedef)
+- [ReleaseTypeDef](./type_defs.md#releasetypedef)
 
 ### Executor().command_get_version
 
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L178)
+[Show source in executor.py:195](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L195)
+
+#### Signature
 
 ```python
-def command_get_version() -> Version:
+def command_get_version(self) -> Version: ...
 ```
 
 #### See also
 
-- [Version](version.md#version)
+- [Version](./version.md#version)
 
 ### Executor().command_is_stable
 
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L145)
-
-```python
-def command_is_stable() -> None:
-```
+[Show source in executor.py:162](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L162)
 
 Check whether version is stable.
 
@@ -126,13 +134,15 @@ Check whether version is stable.
 
 - `ExecutorError` - If it is not.
 
-### Executor().command_set
-
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L112)
+#### Signature
 
 ```python
-def command_set(release: ReleaseNonLocalTypeDef, value: int) -> Version:
+def command_is_stable(self) -> None: ...
 ```
+
+### Executor().command_set
+
+[Show source in executor.py:113](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L113)
 
 Set version part.
 
@@ -145,26 +155,30 @@ Set version part.
 
 A new Version.
 
+#### Signature
+
+```python
+def command_set(self, release: ReleaseNonLocalTypeDef, value: int) -> Version: ...
+```
+
 #### See also
 
-- [ReleaseNonLocalTypeDef](type_defs.md#releasenonlocaltypedef)
-- [Version](version.md#version)
+- [ReleaseNonLocalTypeDef](./type_defs.md#releasenonlocaltypedef)
+- [Version](./version.md#version)
 
 ### Executor().command_set_version
 
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L184)
+[Show source in executor.py:201](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L201)
+
+#### Signature
 
 ```python
-def command_set_version() -> None:
+def command_set_version(self) -> None: ...
 ```
 
 ### Executor().command_stable
 
-[[find in source code]](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L136)
-
-```python
-def command_stable() -> Version:
-```
+[Show source in executor.py:153](https://github.com/vemel/newversion/blob/main/newversion/executor.py#L153)
 
 Get stable non-post, non-local version from current.
 
@@ -172,6 +186,12 @@ Get stable non-post, non-local version from current.
 
 A new Version.
 
+#### Signature
+
+```python
+def command_stable(self) -> Version: ...
+```
+
 #### See also
 
-- [Version](version.md#version)
+- [Version](./version.md#version)

@@ -1,9 +1,4 @@
-import sys
-
-if sys.version_info < (3, 8, 0):
-    from typing_extensions import Literal  # type: ignore
-else:
-    from typing import Literal
+from typing import Literal, NamedTuple, Optional, Tuple, Union
 
 ReleaseTypeDef = Literal[
     "major",
@@ -33,8 +28,18 @@ ReleaseNonLocalTypeDef = Literal[
 ]
 
 ReleaseMainTypeDef = Literal["major", "minor", "micro"]
+ReleaseMainPostTypeDef = Literal["major", "minor", "micro", "post"]
 
 OperatorTypeDef = Literal["lt", "lte", "gt", "gte", "eq", "ne"]
 
 PrereleaseTypeDef = Literal["rc", "alpha", "beta"]
 PrereleaseLooseTypeDef = Literal["rc", "alpha", "beta", "a", "b", "c", None]
+
+
+class BaseVersion(NamedTuple):
+    epoch: int
+    release: Tuple[int, ...]
+    dev: Optional[Tuple[str, int]]
+    pre: Optional[Tuple[str, int]]
+    post: Optional[Tuple[str, int]]
+    local: Optional[Tuple[Union[int, str], ...]]

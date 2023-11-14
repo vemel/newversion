@@ -20,6 +20,7 @@ class TestVersion:
         assert executor.command_get("beta") == "0"
         assert executor.command_get("post") == "0"
         assert executor.command_get("epoch") == "0"
+        assert executor.command_get("dev") == "0"
         assert Executor(Version("1.2.3a4")).command_get("alpha") == "4"
         assert Executor(Version("1.2.3b5")).command_get("beta") == "5"
         assert Executor(Version("1.2.3.post7")).command_get("post") == "7"

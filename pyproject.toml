@@ -47,7 +47,6 @@ handsdown = { version = "*", python = ">=3.11" }
 pytest = { version = "*", python = ">=3.11" }
 flake8 = { version = "*", python = ">=3.11" }
 pytest-cov = { version = "*", python = ">=3.11" }
-codecov = { version = "*", python = ">=3.11" }
 twine = { version = "*", python = ">=3.11" }
 
 [build-system]

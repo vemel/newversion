@@ -9,5 +9,3 @@ poetry run isort .
 poetry run npx pyright
 poetry run pytest
 poetry run flake8 .
-
-./scripts/docs.sh

@@ -1,9 +1,11 @@
 """
 Extended `packaging.version.Version` implementation.
 """
+
 from typing import Any, Dict, Optional, Tuple, Type, TypeVar, Union
 
 import packaging.version
+from typing_extensions import Self
 
 from newversion.constants import VersionParts
 from newversion.type_defs import (
@@ -32,12 +34,12 @@ class Version(packaging.version.Version):
         try:
             super().__init__(version)
         except packaging.version.InvalidVersion as e:
-            raise VersionError(e)
+            raise VersionError(e) from None
 
     @classmethod
     def zero(cls: Type[_R]) -> _R:
         """
-        Get zero version `0.0.0`
+        Get zero version `0.0.0`.
         """
         return cls("0.0.0")
 
@@ -49,6 +51,9 @@ class Version(packaging.version.Version):
 
     @property
     def prerelease_type(self) -> Optional[PrereleaseTypeDef]:
+        """
+        Repease type as VersionParts.
+        """
         if not self.pre:
             return None
 
@@ -73,22 +78,22 @@ class Version(packaging.version.Version):
     def base(self, base: BaseVersion) -> None:
         self._version = base
 
-    def copy(self: _R) -> _R:
+    def copy(self) -> Self:
         """
         Create a copy of a current version instance.
         """
         return self.__class__(self.dumps())
 
-    def _replace(self: _R, base: BaseVersion) -> _R:
+    def _replace(self, base: BaseVersion) -> Self:
         new_version = self.copy()
         new_version.base = base
         return new_version.copy()
 
     def bump_release(
-        self: _R,
+        self,
         release_type: ReleaseMainTypeDef = "micro",
         inc: int = 1,
-    ) -> _R:
+    ) -> Self:
         """
         Get next release version.
 
@@ -97,7 +102,6 @@ class Version(packaging.version.Version):
             inc -- Increment for major version.
 
         Examples:
-
             ```python
             Version("1.2.3").bump_release()  # "1.2.4"
             Version("1.2.3").bump_release("major")  # "2.0.0"
@@ -114,7 +118,7 @@ class Version(packaging.version.Version):
 
         return self.bump_micro(inc)
 
-    def bump_major(self: _R, inc: int = 1) -> _R:
+    def bump_major(self, inc: int = 1) -> Self:
         """
         Get next major version.
 
@@ -122,7 +126,6 @@ class Version(packaging.version.Version):
             inc -- Increment for major version.
 
         Examples:
-
             ```python
             Version("1.2.3").bump_major()  # "2.0.0"
             Version("1.2.3.dev14").bump_major()  # "2.0.0"
@@ -148,7 +151,7 @@ class Version(packaging.version.Version):
             )
         )
 
-    def bump_minor(self: _R, inc: int = 1) -> _R:
+    def bump_minor(self, inc: int = 1) -> Self:
         """
         Get next minor version.
 
@@ -156,7 +159,6 @@ class Version(packaging.version.Version):
             inc -- Increment for minor version.
 
         Examples:
-
             ```python
             Version("1.2.3").bump_minor()  # "1.3.0"
             Version("1.2.3.dev14").bump_minor()  # "1.3.0"
@@ -184,7 +186,7 @@ class Version(packaging.version.Version):
             )
         )
 
-    def bump_micro(self: _R, inc: int = 1) -> _R:
+    def bump_micro(self, inc: int = 1) -> Self:
         """
         Get next micro version.
 
@@ -192,7 +194,6 @@ class Version(packaging.version.Version):
             inc -- Increment for micro version.
 
         Examples:
-
             ```python
             Version("1.2.3").bump_micro()  # "1.2.4"
             Version("1.2.3.dev14").bump_micro()  # "1.2.4"
@@ -219,12 +220,13 @@ class Version(packaging.version.Version):
         )
 
     def bump_dev(
-        self: _R,
+        self,
         inc: int = 1,
         bump_release: ReleaseMainPostTypeDef = "micro",
-    ) -> _R:
+    ) -> Self:
         """
         Get next dev version.
+
         If version is stable - bump release for proper versioning as well.
         Defaults to bumping `micro`, falls back automatically to `post`
 
@@ -233,7 +235,6 @@ class Version(packaging.version.Version):
             bump_release -- Release number to bump if version is stable.
 
         Examples:
-
             ```python
             Version("1.2.3").bump_dev()  # "1.2.4.dev0"
             Version("1.2.3").bump_dev(1, 'minor')  # "1.3.0.dev0"
@@ -263,13 +264,14 @@ class Version(packaging.version.Version):
         return self.replace(dev=(inc - 1))
 
     def bump_prerelease(
-        self: _R,
+        self,
         inc: int = 1,
         release_type: Optional[PrereleaseLooseTypeDef] = None,
         bump_release: ReleaseMainTypeDef = "micro",
-    ) -> _R:
+    ) -> Self:
         """
         Get next prerelease version.
+
         If version is stable - bump `micro` for proper versioning as well.
         Defaults to `rc` pre-releases.
 
@@ -279,7 +281,6 @@ class Version(packaging.version.Version):
             bump_release -- Release number to bump if version is stable.
 
         Examples:
-
             ```python
             Version("1.2.3").bump_prerelease()  # "1.2.4rc1"
             Version("1.2.3").bump_prerelease(bump_release="major")  # "2.0.0rc1"
@@ -313,7 +314,7 @@ class Version(packaging.version.Version):
         )
         return self._replace(base)
 
-    def bump_postrelease(self: _R, inc: int = 1) -> _R:
+    def bump_postrelease(self, inc: int = 1) -> Self:
         """
         Get next postrelease version.
 
@@ -321,7 +322,6 @@ class Version(packaging.version.Version):
             inc -- Increment for micro version.
 
         Examples:
-
             ```python
             Version("1.2.3").bump_postrelease()  # "1.2.3.post1"
             Version("1.2.3.post3").bump_postrelease()  # "1.2.3.post4"
@@ -347,10 +347,11 @@ class Version(packaging.version.Version):
         return self._replace(base)
 
     def replace(
-        self: _R,
+        self,
         major: Optional[int] = None,
         minor: Optional[int] = None,
         micro: Optional[int] = None,
+        *,
         alpha: Optional[int] = None,
         beta: Optional[int] = None,
         rc: Optional[int] = None,
@@ -358,12 +359,11 @@ class Version(packaging.version.Version):
         post: Optional[int] = None,
         epoch: Optional[int] = None,
         local: Optional[str] = None,
-    ) -> _R:
+    ) -> Self:
         """
         Modify version parts.
 
         Examples:
-
             ```python
             Version("1.2.3").replace(dev=24) # "1.2.3.dev24"
             Version("1.2.3rc5").replace(17) # "1.2.3.dev17"
@@ -384,13 +384,13 @@ class Version(packaging.version.Version):
         Returns:
             A new instance.
         """
-        kwargs: Dict[str, Any] = dict(
-            release=(
+        kwargs: Dict[str, Any] = {
+            "release": (
                 major if major is not None else self.major,
                 minor if minor is not None else self.minor,
                 micro if micro is not None else self.micro,
             )
-        )
+        }
         if alpha is not None:
             kwargs[VersionParts.PRE] = (VersionParts.ALPHA, alpha)
         if beta is not None:
@@ -418,12 +418,11 @@ class Version(packaging.version.Version):
         """
         return not self.is_prerelease
 
-    def get_stable(self: _R) -> _R:
+    def get_stable(self) -> Self:
         """
         Get stable version from pre- or post- release.
 
         Examples:
-
             ```python
             Version("1.2.3").get_stable() # "1.2.3"
             Version("2.1.0a2").get_stable() # "2.1.0"

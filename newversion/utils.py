@@ -1,3 +1,7 @@
+"""
+Utility functions for newversion.
+"""
+
 from pathlib import Path
 
 

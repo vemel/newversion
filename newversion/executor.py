@@ -20,9 +20,9 @@ class Executor:
 
     def __init__(
         self,
-        input: Optional[Version] = None,
+        version: Optional[Version] = None,
     ) -> None:
-        self._input = input if input is not None else Version.zero()
+        self._input = version if version is not None else Version.zero()
 
     def command_get(
         self,
@@ -38,7 +38,7 @@ class Executor:
             Part as a string.
         """
         if release == VersionParts.LOCAL:
-            return self._input.local if self._input.local else ""
+            return self._input.local or ""
 
         if release == VersionParts.PRE:
             return f"{self._input.pre[0]}{self._input.pre[1]}" if self._input.pre else ""
@@ -67,11 +67,11 @@ class Executor:
         if release == VersionParts.EPOCH:
             return str(self._input.epoch) if self._input.epoch else "0"
 
-        result = dict(
-            major=self._input.major,
-            minor=self._input.minor,
-            micro=self._input.micro,
-        )[release]
+        result = {
+            "major": self._input.major,
+            "minor": self._input.minor,
+            "micro": self._input.micro,
+        }[release]
         return str(result)
 
     def command_bump(self, release: ReleaseNonLocalTypeDef, increment: int) -> Version:
@@ -85,11 +85,7 @@ class Executor:
         Returns:
             A new Version.
         """
-        if (
-            release == VersionParts.MAJOR
-            or release == VersionParts.MINOR
-            or release == VersionParts.MICRO
-        ):
+        if release in (VersionParts.MAJOR, VersionParts.MINOR, VersionParts.MICRO):
             return self._input.bump_release(release, increment)
 
         if release == VersionParts.PRE:
@@ -98,11 +94,7 @@ class Executor:
         if release == VersionParts.POST:
             return self._input.bump_postrelease(increment)
 
-        if (
-            release == VersionParts.RC
-            or release == VersionParts.ALPHA
-            or release == VersionParts.BETA
-        ):
+        if release in (VersionParts.RC, VersionParts.ALPHA, VersionParts.BETA):
             return self._input.bump_prerelease(increment, release)
 
         if release == VersionParts.DEV:
@@ -182,26 +174,49 @@ class Executor:
         Returns:
             Processed `Version`.
         """
-        commands = dict(
-            lt=(operator.lt, "not lesser than"),
-            lte=(operator.le, "not lesser than or equal to"),
-            gt=(operator.gt, "not greater than"),
-            gte=(operator.ge, "not greater than or equal to"),
-            eq=(operator.eq, "not equal to"),
-            ne=(operator.ne, "equal to"),
-        )
+        commands = {
+            "lt": (operator.lt, "not lesser than"),
+            "lte": (operator.le, "not lesser than or equal to"),
+            "gt": (operator.gt, "not greater than"),
+            "gte": (operator.ge, "not greater than or equal to"),
+            "eq": (operator.eq, "not equal to"),
+            "ne": (operator.ne, "equal to"),
+        }
         op, message = commands[command]
         if not (op(self._input, other)):
             raise ExecutorError(f"Version {self._input} is {message} {other}")
 
     def command_get_version(self) -> Version:
+        """
+        Retrieve the current version of the package.
+
+        This method attempts to get the current version of the package by
+        using the PackageVersion class. If an error occurs during this
+        process, it raises an ExecutorError.
+
+        Returns:
+            Version: The current version of the package.
+
+        Raises:
+            ExecutorError: If there is an error retrieving the package version.
+        """
         try:
             return PackageVersion(Path.cwd()).get()
         except PackageVersionError as e:
-            raise ExecutorError(e)
+            raise ExecutorError(e) from None
 
     def command_set_version(self) -> None:
+        """
+        Set the package version.
+
+        This method attempts to set the package version to the value provided
+        by `self._input`. If an error occurs during this process, it raises
+        an `ExecutorError` with the original `PackageVersionError` as the cause.
+
+        Raises:
+            ExecutorError: If there is an error setting the package version.
+        """
         try:
             PackageVersion(Path.cwd()).set(self._input)
         except PackageVersionError as e:
-            raise ExecutorError(e)
+            raise ExecutorError(e) from None

@@ -1,3 +1,8 @@
+"""
+Exceptions.
+"""
+
+
 class PackageVersionError(Exception):
     """
     Main PackageVersion error.
@@ -12,5 +17,5 @@ class ExecutorError(Exception):
 
 class CLIError(Exception):
     """
-    Main CLI error
+    Main CLI error.
     """

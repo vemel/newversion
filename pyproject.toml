@@ -1,11 +1,11 @@
-[tool.poetry]
+[project]
 name = "newversion"
 version = "2.0.0"
+requires-python = ">=3.8"
 description = "PEP 440 version manager"
-authors = ["Vlad Emelianov <vlad.emelianov.nz@gmail.com>"]
-license = "MIT"
+authors = [{ name = "Vlad Emelianov", email = "vlad.emelianov.nz@gmail.com" }]
+license = { file = "LICENSE" }
 readme = "README.md"
-homepage = "https://github.com/vemel/newversion"
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
@@ -25,33 +25,32 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 keywords = ["version", "pep440"]
-packages = [{ include = "newversion" }]
-include = ["LICENSE", "newversion/py.typed"]
+dependencies = ["packaging>=20.0"]
 
-[tool.poetry.scripts]
+[project.optional-dependencies]
+build = ["setuptools"]
+check = ["boto3-stubs", "types-aiobotocore", "types-aioboto3"]
+
+[tool.uv]
+dev-dependencies = ["ruff", "pyright", "pytest-cov", "pytest"]
+package = true
+
+[project.scripts]
 newversion = 'newversion.main:main_cli'
 
-[tool.poetry.urls]
-"Documentation" = "https://newversion.readthedocs.io/en/latest/"
-"Source" = "https://github.com/vemel/newversion"
-"Tracker" = "https://github.com/vemel/newversion/issues"
-
-[tool.poetry.dependencies]
-python = ">=3.8.0,<4.0.0"
-packaging = ">=20.0"
-
-[tool.poetry.dev-dependencies]
-black = { version = "*", python = ">=3.11" }
-isort = { version = "*", python = ">=3.11" }
-handsdown = { version = "*", python = ">=3.11" }
-pytest = { version = "*", python = ">=3.11" }
-flake8 = { version = "*", python = ">=3.11" }
-pytest-cov = { version = "*", python = ">=3.11" }
-twine = { version = "*", python = ">=3.11" }
-
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ['setuptools']
+build-backend = 'setuptools.build_meta'
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["newversion", "newversion.*"]
+
+[project.urls]
+"Documentation" = "https://newversion.readthedocs.io/en/latest/"
+"Repository" = "https://github.com/vemel/newversion"
+"Issues" = "https://github.com/vemel/newversion/issues"
+
 
 [tool.coverage.report]
 exclude_lines = [
@@ -66,17 +65,6 @@ exclude_lines = [
 ignore_errors = true
 omit = [".venv/*", "tests/*"]
 
-[tool.isort]
-profile = "black"
-line_length = 100
-known_first_party = ["newversion", "tests"]
-src_paths = []
-
-[tool.black]
-line-length = 100
-include = '(newversion|tests)/.*\.pyi?$'
-target-version = ['py38', 'py39', 'py310', 'py311', 'py312']
-
 [tool.pyright]
 include = ["newversion"]
 exclude = ["**/__pycache__", "tests", "**/build", "typings"]
@@ -88,3 +76,101 @@ reportMissingTypeArgument = "error"
 reportIncompatibleMethodOverride = "error"
 reportIncompatibleVariableOverride = "error"
 reportUnknownParameterType = "error"
+
+[tool.ruff]
+exclude = [
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".venv",
+    ".vscode",
+    "build",
+    "dist",
+]
+
+line-length = 100
+indent-width = 4
+target-version = "py38"
+
+[tool.ruff.lint]
+preview = true
+select = [
+    "E",    # pycodestyle
+    "W",    # pycodestyle
+    "F",    # Pyflakes
+    "B",    # flake8-bugbear
+    "I",    # isort
+    "N",    # pep8-naming
+    "D",    # pydocstyle
+    "C4",   # flake8-comprehensions
+    "C90",  # mccabe
+    "RUF",  # Ruff-specific rules
+    "SIM",  # flake8-simplify
+    "PYI",  # flake8-pyi
+    "PT",   # flake8-pytest-style
+    "T",    # flake8-raise
+    "LOG",  # flake8-logging
+    "Q",    # flake8-quotes
+    "RSE",  # flake8-raise
+    "RET",  # flake8-return
+    "TID",  # flake8-tidy-imports
+    "TCH",  # flake8-type-checking
+    "S",    # flake8-bandit
+    "BLE",  # flake8-blind-except
+    "ANN",  # flake8-annotations
+    "A",    # flake8-builtins
+    "PTH",  # flake8-use-pathlib
+    "YTT",  # flake8-2020
+    "UP",   # pyupgrade
+    "TRY",  # tryceratops
+    "PERF", # Perflint
+    "FURB", # refurb
+    "PL",   # pylint
+]
+ignore = [
+    "C901",
+    "PLR0911",
+    "PLR0912",
+    "PLR6201",
+    "D107",    # undocumented-public-init
+    "D200",    # fits-on-one-line
+    "D203",    # one-blank-line-before-class
+    "D212",    # multi-line-summary-first-line
+    "D406",    # new-line-after-section-name
+    "D407",    # dashed-underline-after-section
+    "D413",    # blank-line-after-last-section
+    "D417",    # undocumented-param
+    "S310",    # suspicious-url-open-usage
+    "S404",    # suspicious-subprocess-import
+    "S603",    # subprocess-without-shell-equals-true
+    "ANN101",  # missing-type-self
+    "ANN102",  # missing-type-cls
+    # "ANN401",  # any-type
+    "TRY003",  # raise-vanilla-args
+    "PERF203", # try-except-in-loop
+    "PLR0913", # too-many-arguments
+    "PLR0904", # too-many-public-methods
+    "PLR6301", # no-self-use
+]
+fixable = ["ALL"]
+unfixable = ["B"]
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.lint.per-file-ignores]
+"test_*.py" = [
+    "D",       # missing-docstring
+    "S101",    # use-of-assert
+    "N803",    # argument-name-does-not-match
+    "PLR2004", # constant-comparison
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "lf"
+docstring-code-format = false
+docstring-code-line-length = "dynamic"

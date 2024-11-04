@@ -13,7 +13,7 @@ class EOLFixer:
 
     @classmethod
     def is_crlf(cls, text: str) -> bool:
-        """
+        r"""
         Check whether text has `\r\n` characters.
 
         Arguments:
@@ -23,7 +23,7 @@ class EOLFixer:
 
     @classmethod
     def to_lf(cls, text: str) -> str:
-        """
+        r"""
         Convert `\r\n` to `\n`.
 
         Arguments:
@@ -39,7 +39,7 @@ class EOLFixer:
 
     @classmethod
     def to_crlf(cls, text: str) -> str:
-        """
+        r"""
         Convert `\n` to `\r\n`.
 
         Arguments:

@@ -1,13 +1,14 @@
 """
 Main CLI parser.
 """
+
 import argparse
+import contextlib
+import importlib.metadata
 import sys
 from typing import Sequence
 
-import pkg_resources
-
-from newversion.constants import Commands, VersionParts
+from newversion.constants import PACKAGE_NAME, Commands, VersionParts
 from newversion.version import Version
 
 
@@ -28,23 +29,30 @@ def get_stdin() -> Version:
     return Version.zero()
 
 
+def get_program_version() -> str:
+    """
+    Get program version.
+    """
+    with contextlib.suppress(importlib.metadata.PackageNotFoundError):
+        return importlib.metadata.version(PACKAGE_NAME)
+
+    return "0.0.0"
+
+
 def parse_args(args: Sequence[str]) -> argparse.Namespace:
     """
-    Main CLI parser.
+    Parse CLI arguments.
 
     Returns:
         Argument parser Namespace.
     """
-    try:
-        version = pkg_resources.get_distribution("newversion").version
-    except pkg_resources.DistributionNotFound:
-        version = "0.0.0"
-
     parser = argparse.ArgumentParser(
         "newversion",
         description="SemVer helpers for PEP-440 versions",
     )
-    parser.add_argument("-V", "--version", action="version", version=version, help="Show version")
+    parser.add_argument(
+        "-V", "--version", action="version", version=get_program_version(), help="Show version"
+    )
     parser.add_argument(
         "-i",
         "--input",

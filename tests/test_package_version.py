@@ -1,13 +1,12 @@
 import tempfile
 from pathlib import Path
 
-from newversion.exceptions import PackageVersionError
 from newversion.package_version import PackageVersion
 from newversion.version import Version
 
 
 class TestPackageVersion:
-    def test_get(self):
+    def test_get(self) -> None:
         with tempfile.TemporaryDirectory() as path_str:
             path = Path(path_str)
             (path / "setup.py").write_text("\n\nsetup(\n    version ='1.2.3',\n)")
@@ -22,7 +21,7 @@ class TestPackageVersion:
             )
             assert PackageVersion(path).get() == Version("1.2.6")
 
-    def test_set(self):
+    def test_set(self) -> None:
         with tempfile.TemporaryDirectory() as path_str:
             path = Path(path_str)
             assert PackageVersion(path).set(Version("1.2.3")) is None

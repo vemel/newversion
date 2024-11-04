@@ -1,3 +1,7 @@
+"""
+Main entrypoint.
+"""
+
 import argparse
 import logging
 import sys
@@ -10,7 +14,7 @@ from newversion.executor import Executor
 
 def setup_logging(level: int) -> logging.Logger:
     """
-    Setup logging for CLI usage.
+    Set up logging for CLI usage.
     """
     logger = logging.getLogger(LOGGER_NAME)
     logger.setLevel(level)
@@ -23,7 +27,7 @@ def setup_logging(level: int) -> logging.Logger:
 
 def main_api(config: argparse.Namespace) -> str:
     """
-    Main API entrypoint.
+    Run main API entrypoint.
     """
     executor = Executor(config.input)
     try:
@@ -49,12 +53,12 @@ def main_api(config: argparse.Namespace) -> str:
 
         return config.input.dumps()
     except ExecutorError as e:
-        raise CLIError(e)
+        raise CLIError(e) from None
 
 
 def main_cli() -> None:
     """
-    Main entrypoint for CLI.
+    Run main entrypoint for CLI.
     """
     config = parse_args(sys.argv[1:])
     log_level = logging.INFO
@@ -66,8 +70,8 @@ def main_cli() -> None:
     logger = setup_logging(log_level)
     try:
         output = main_api(config)
-    except CLIError as e:
-        logger.error(f"{e}")
+    except CLIError:
+        logger.exception("Error")
         sys.exit(1)
 
     if output:

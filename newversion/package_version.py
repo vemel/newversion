@@ -1,3 +1,7 @@
+"""
+PackageVersion handler.
+"""
+
 import logging
 import re
 from pathlib import Path
@@ -11,6 +15,10 @@ from newversion.version import Version
 
 
 class PackageVersion:
+    """
+    Handles the retrieval and setting of a Python package version from various configuration files.
+    """
+
     RE_PYPROJECT = re.compile(r"^version\s*=\s*['\"](\S+)['\"]")
     RE_SETUP_CFG_FILE = re.compile(r"^version\s*=\s*file:\s*(\S+)")
     RE_SETUP_CFG = re.compile(r"^version\s*=\s*(\S+)")
@@ -34,7 +42,7 @@ class PackageVersion:
 
     def _get_from_pyproject(self) -> Optional[Version]:
         if not self._pyproject_path.exists():
-            return
+            return None
 
         self._logger.debug(f"Found {print_path(self._pyproject_path)}, extracting version from it")
         text = self._pyproject_path.read_text()
@@ -49,6 +57,8 @@ class PackageVersion:
             version_str = match.group(1)
             self._logger.debug(f"Version {version_str} found")
             return Version(version_str)
+
+        return None
 
     def _set_in_pyproject(self, version: Version) -> None:
         if not self._pyproject_path.exists():
@@ -83,7 +93,7 @@ class PackageVersion:
 
     def _get_from_setup_cfg(self) -> Optional[Version]:
         if not self._setup_cfg_path.exists():
-            return
+            return None
 
         self._logger.debug(f"Found {print_path(self._setup_cfg_path)}, extracting version from it")
         text = self._setup_cfg_path.read_text()
@@ -104,6 +114,8 @@ class PackageVersion:
             version_str = match.group(1)
             self._logger.debug(f"Version {version_str} found")
             return Version(version_str)
+
+        return None
 
     def _set_in_setup_cfg(self, version: Version) -> None:
         if not self._setup_cfg_path.exists():
@@ -145,7 +157,7 @@ class PackageVersion:
 
     def _get_from_setup_py(self) -> Optional[Version]:
         if not self._setup_py_path.exists():
-            return
+            return None
 
         self._logger.debug(f"Found {print_path(self._setup_py_path)}, extracting version from it")
         text = self._setup_py_path.read_text()
@@ -160,6 +172,8 @@ class PackageVersion:
             version_str = match.group(1)
             self._logger.debug(f"Version {version_str} found")
             return Version(version_str)
+
+        return None
 
     def _set_in_setup_py(self, version: Version) -> None:
         if not self._setup_py_path.exists():
@@ -193,6 +207,25 @@ class PackageVersion:
             self._setup_py_path.write_text(text)
 
     def get(self) -> Version:
+        """
+        Retrieve the version of the Python package.
+
+        This method attempts to get the package version from different sources
+        in the following order:
+        1. pyproject.toml
+        2. setup.cfg
+        3. setup.py
+
+        If the version is found in any of these sources, it is returned.
+        If the version cannot be determined from any of these sources, a
+        PackageVersionError is raised.
+
+        Returns:
+            Version: The version of the Python package.
+
+        Raises:
+            PackageVersionError: If the package version cannot be determined.
+        """
         result = self._get_from_pyproject()
         if result:
             return result
@@ -206,6 +239,17 @@ class PackageVersion:
         raise PackageVersionError("Cannot get Python package version.")
 
     def set(self, version: Version) -> None:
+        """
+        Set the version for the package.
+
+        This method updates the version in multiple configuration files:
+        - pyproject.toml
+        - setup.cfg
+        - setup.py
+
+        Args:
+            version (Version): The new version to set.
+        """
         self._set_in_pyproject(version)
         self._set_in_setup_cfg(version)
         self._set_in_setup_py(version)

@@ -2,7 +2,10 @@
 Constants used in project.
 """
 
-LOGGER_NAME = "newversion"
+from typing import Final
+
+PACKAGE_NAME: Final = "newversion"
+LOGGER_NAME: Final = "newversion"
 
 
 class VersionParts:
@@ -10,37 +13,37 @@ class VersionParts:
     Utility class with constants for version parts.
     """
 
-    ALPHA = "alpha"
-    BETA = "beta"
-    RC = "rc"
-    PRE = "pre"
-    POST = "post"
-    DEV = "dev"
-    MAJOR = "major"
-    MINOR = "minor"
-    MICRO = "micro"
-    LOCAL = "local"
-    EPOCH = "epoch"
+    ALPHA: Final = "alpha"
+    BETA: Final = "beta"
+    RC: Final = "rc"
+    PRE: Final = "pre"
+    POST: Final = "post"
+    DEV: Final = "dev"
+    MAJOR: Final = "major"
+    MINOR: Final = "minor"
+    MICRO: Final = "micro"
+    LOCAL: Final = "local"
+    EPOCH: Final = "epoch"
 
 
 class Commands:
     """
-    CLI commands
+    CLI commands.
     """
 
-    LT = "lt"
-    LTE = "lte"
-    GT = "gt"
-    GTE = "gte"
-    EQ = "eq"
-    NE = "ne"
+    LT: Final = "lt"
+    LTE: Final = "lte"
+    GT: Final = "gt"
+    GTE: Final = "gte"
+    EQ: Final = "eq"
+    NE: Final = "ne"
 
-    COMPARE = {LT, LTE, GT, GTE, EQ, NE}
+    COMPARE: Final = {LT, LTE, GT, GTE, EQ, NE}
 
-    IS_STABLE = "is_stable"
-    SET = "set"
-    GET = "get"
-    BUMP = "bump"
-    STABLE = "stable"
-    PACKAGE = "package"
-    SET_PACKAGE = "set_package"
+    IS_STABLE: Final = "is_stable"
+    SET: Final = "set"
+    GET: Final = "get"
+    BUMP: Final = "bump"
+    STABLE: Final = "stable"
+    PACKAGE: Final = "package"
+    SET_PACKAGE: Final = "set_package"

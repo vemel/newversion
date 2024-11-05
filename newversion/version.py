@@ -59,11 +59,11 @@ class Version(packaging.version.Version):
 
         letter = self.pre[0]
         if letter == "rc":
-            return VersionParts.RC
+            return VersionParts.RC.value
         if letter == "a":
-            return VersionParts.ALPHA
+            return VersionParts.ALPHA.value
         if letter == "b":
-            return VersionParts.BETA
+            return VersionParts.BETA.value
 
         return None
 
@@ -111,9 +111,9 @@ class Version(packaging.version.Version):
         Returns:
             A new copy.
         """
-        if release_type == VersionParts.MAJOR:
+        if release_type == VersionParts.MAJOR.value:
             return self.bump_major(inc)
-        if release_type == VersionParts.MINOR:
+        if release_type == VersionParts.MINOR.value:
             return self.bump_minor(inc)
 
         return self.bump_micro(inc)
@@ -292,13 +292,13 @@ class Version(packaging.version.Version):
         Returns:
             A new copy.
         """
-        prerelease_type = release_type or self.prerelease_type or VersionParts.RC
+        prerelease_type = release_type or self.prerelease_type or VersionParts.RC.value
         increment = inc if not self.base.pre else (max(self.base.pre[-1], 1) + inc)
         pre = (prerelease_type, increment)
 
         new_version = self._replace(self._copy_base(pre=pre))
         if new_version < self:
-            prerelease_type = release_type or VersionParts.RC
+            prerelease_type = release_type or VersionParts.RC.value
             new_version = self.get_stable().bump_release(bump_release)
 
         if prerelease_type != self.prerelease_type:
@@ -332,10 +332,10 @@ class Version(packaging.version.Version):
         Returns:
             A new copy.
         """
-        post = (VersionParts.POST, max(inc, 1))
+        post = (VersionParts.POST.value, max(inc, 1))
         base_post: Optional[Tuple[str, int]] = self._version.post
         if base_post:
-            post = (VersionParts.POST, max(base_post[1], 1) + inc)
+            post = (VersionParts.POST.value, max(base_post[1], 1) + inc)
         base = BaseVersion(
             epoch=0,
             release=self._version.release,
@@ -392,19 +392,19 @@ class Version(packaging.version.Version):
             )
         }
         if alpha is not None:
-            kwargs[VersionParts.PRE] = (VersionParts.ALPHA, alpha)
+            kwargs[VersionParts.PRE.value] = (VersionParts.ALPHA.value, alpha)
         if beta is not None:
-            kwargs[VersionParts.PRE] = (VersionParts.BETA, beta)
+            kwargs[VersionParts.PRE.value] = (VersionParts.BETA.value, beta)
         if rc is not None:
-            kwargs[VersionParts.PRE] = (VersionParts.RC, rc)
+            kwargs[VersionParts.PRE.value] = (VersionParts.RC.value, rc)
         if dev is not None:
-            kwargs[VersionParts.DEV] = (VersionParts.DEV, dev)
+            kwargs[VersionParts.DEV.value] = (VersionParts.DEV.value, dev)
         if post is not None:
-            kwargs[VersionParts.POST] = (VersionParts.POST, post)
+            kwargs[VersionParts.POST.value] = (VersionParts.POST.value, post)
         if epoch is not None:
-            kwargs[VersionParts.EPOCH] = epoch
+            kwargs[VersionParts.EPOCH.value] = epoch
         if local is not None:
-            kwargs[VersionParts.LOCAL] = [local]
+            kwargs[VersionParts.LOCAL.value] = [local]
 
         return self._replace(self._copy_base(**kwargs))
 

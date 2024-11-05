@@ -4,11 +4,14 @@ Main CLI parser.
 
 import argparse
 import contextlib
+import enum
 import importlib.metadata
 import sys
-from typing import Sequence
+from dataclasses import dataclass
+from typing import Any, Optional, Sequence, Type, Union
 
 from newversion.constants import PACKAGE_NAME, Commands, VersionParts
+from newversion.type_defs import ReleaseNonLocalTypeDef
 from newversion.version import Version
 
 
@@ -39,7 +42,71 @@ def get_program_version() -> str:
     return "0.0.0"
 
 
-def parse_args(args: Sequence[str]) -> argparse.Namespace:
+@dataclass
+class CLINamespace:
+    """
+    CLI namespace dataclass.
+    """
+
+    version: Version
+    command: Commands
+    release: ReleaseNonLocalTypeDef
+    increment: int
+    other: Version
+    value: int
+    verbose: bool
+    quiet: bool
+
+
+class EnumListAction(argparse.Action):
+    """
+    Argparse action for handling Enums.
+    """
+
+    def __init__(
+        self,
+        *,
+        type: Type[enum.Enum],  # noqa: A002
+        option_strings: Sequence[str],
+        dest: str,
+        default: Optional[Sequence[enum.Enum]] = None,
+        required: bool = False,
+        choices: Optional[Sequence[enum.Enum]] = None,
+        **kwargs: Optional[str],
+    ) -> None:
+        self._enum_class = type
+        super_choices = choices if choices is not None else list(self._enum_class)
+
+        super().__init__(
+            choices=tuple(e.value for e in super_choices),
+            option_strings=option_strings,
+            default=default,
+            dest=dest,
+            type=None,
+            required=required,
+            **kwargs,
+        )
+
+    def __call__(
+        self,
+        parser: argparse.ArgumentParser,
+        namespace: argparse.Namespace,
+        value: Union[str, Sequence[Any], None],
+        _option_string: Optional[str] = None,
+    ) -> None:
+        """
+        Convert value back into an Enum.
+        """
+        value_list: list[str] = []
+        if isinstance(value, str):
+            value_list.append(value)
+        if isinstance(value, list):
+            value_list.extend([i for i in value if isinstance(i, str)])
+        enum_values = [self._enum_class(i) for i in value_list]
+        setattr(namespace, self.dest, enum_values)
+
+
+def parse_args(args: Sequence[str]) -> CLINamespace:
     """
     Parse CLI arguments.
 
@@ -56,6 +123,7 @@ def parse_args(args: Sequence[str]) -> argparse.Namespace:
     parser.add_argument(
         "-i",
         "--input",
+        dest="version",
         type=Version,
         default=None,
         help="Input version, can be provided as a pipe-in as well.",
@@ -64,9 +132,11 @@ def parse_args(args: Sequence[str]) -> argparse.Namespace:
     parser.add_argument("-q", "--quiet", action="store_true", help="No logging")
 
     subparsers = parser.add_subparsers(help="Available subcommands", dest="command")
-    parser_bump = subparsers.add_parser(Commands.BUMP, help="Bump current version")
+    parser_bump = subparsers.add_parser(Commands.BUMP.value, help="Bump current version")
     parser_bump.add_argument(
         "release",
+        type=VersionParts,
+        action=EnumListAction,
         choices=[
             VersionParts.MAJOR,
             VersionParts.MINOR,
@@ -79,8 +149,8 @@ def parse_args(args: Sequence[str]) -> argparse.Namespace:
             VersionParts.DEV,
         ],
         nargs="?",
-        default="micro",
-        help="Release type. Default: micro",
+        default=VersionParts.MICRO,
+        help=f"Release type. Default: {VersionParts.MICRO.value}",
     )
     parser_bump.add_argument(
         "increment",
@@ -90,40 +160,19 @@ def parse_args(args: Sequence[str]) -> argparse.Namespace:
         help="Version increment. Default: 1",
     )
 
-    parser_get = subparsers.add_parser(Commands.GET, help="Get release number")
+    parser_get = subparsers.add_parser(Commands.GET.value, help="Get release number")
     parser_get.add_argument(
         "release",
-        choices=[
-            VersionParts.MAJOR,
-            VersionParts.MINOR,
-            VersionParts.MICRO,
-            VersionParts.PRE,
-            VersionParts.POST,
-            VersionParts.DEV,
-            VersionParts.RC,
-            VersionParts.ALPHA,
-            VersionParts.BETA,
-            VersionParts.EPOCH,
-            VersionParts.LOCAL,
-        ],
+        type=VersionParts,
+        action=EnumListAction,
         help="Release type",
     )
 
-    parser_set = subparsers.add_parser(Commands.SET, help="Set release number")
+    parser_set = subparsers.add_parser(Commands.SET.value, help="Set release number")
     parser_set.add_argument(
         "release",
-        choices=[
-            VersionParts.MAJOR,
-            VersionParts.MINOR,
-            VersionParts.MICRO,
-            VersionParts.PRE,
-            VersionParts.POST,
-            VersionParts.DEV,
-            VersionParts.RC,
-            VersionParts.ALPHA,
-            VersionParts.BETA,
-            VersionParts.EPOCH,
-        ],
+        type=VersionParts,
+        action=EnumListAction,
         help="Release type",
     )
     parser_set.add_argument(
@@ -132,24 +181,24 @@ def parse_args(args: Sequence[str]) -> argparse.Namespace:
         help="Release number",
     )
 
-    subparsers.add_parser(Commands.STABLE, help="Get stable release of current version")
+    subparsers.add_parser(Commands.STABLE.value, help="Get stable release of current version")
 
     subparsers.add_parser(
-        Commands.IS_STABLE,
+        Commands.IS_STABLE.value,
         help="Check if current version is not a pre- or dev release",
     )
 
     subparsers.add_parser(
-        Commands.PACKAGE,
+        Commands.PACKAGE.value,
         help="Get Python package version. Supports pyproject.toml, setup.cfg and setup.py.",
     )
     subparsers.add_parser(
-        Commands.SET_PACKAGE,
+        Commands.SET_PACKAGE.value,
         help="Set Python package version. Supports pyproject.toml, setup.cfg and setup.py.",
     )
 
     parser_lt = subparsers.add_parser(
-        Commands.LT,
+        Commands.LT.value,
         help="Check if current version is lesser than the other",
     )
     parser_lt.add_argument(
@@ -159,7 +208,7 @@ def parse_args(args: Sequence[str]) -> argparse.Namespace:
     )
 
     parser_lte = subparsers.add_parser(
-        Commands.LTE,
+        Commands.LTE.value,
         help="Check if current version is lesser or equal to the other",
     )
     parser_lte.add_argument(
@@ -169,7 +218,7 @@ def parse_args(args: Sequence[str]) -> argparse.Namespace:
     )
 
     parser_gt = subparsers.add_parser(
-        Commands.GT,
+        Commands.GT.value,
         help="Check if current version is greater than the other",
     )
     parser_gt.add_argument(
@@ -179,7 +228,7 @@ def parse_args(args: Sequence[str]) -> argparse.Namespace:
     )
 
     parser_gte = subparsers.add_parser(
-        Commands.GTE,
+        Commands.GTE.value,
         help="Check if current version is greater or equal to the other",
     )
     parser_gte.add_argument(
@@ -189,7 +238,7 @@ def parse_args(args: Sequence[str]) -> argparse.Namespace:
     )
 
     parser_eq = subparsers.add_parser(
-        Commands.EQ,
+        Commands.EQ.value,
         help="Check if current version is equal to the other",
     )
     parser_eq.add_argument(
@@ -199,7 +248,7 @@ def parse_args(args: Sequence[str]) -> argparse.Namespace:
     )
 
     parser_ne = subparsers.add_parser(
-        Commands.NE,
+        Commands.NE.value,
         help="Check if current version is not equal to the other",
     )
     parser_ne.add_argument(
@@ -210,7 +259,16 @@ def parse_args(args: Sequence[str]) -> argparse.Namespace:
 
     result = parser.parse_args(args)
 
-    if result.input is None:
-        result.input = get_stdin()
+    if result.version is None:
+        result.version = get_stdin()
 
-    return result
+    return CLINamespace(
+        version=result.version,
+        command=Commands(result.command),
+        release=getattr(result, "release", "major"),
+        increment=getattr(result, "increment", 1),
+        other=getattr(result, "other", Version.zero()),
+        value=getattr(result, "value", 1),
+        verbose=result.verbose,
+        quiet=result.quiet,
+    )

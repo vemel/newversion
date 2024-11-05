@@ -2,11 +2,10 @@
 Main entrypoint.
 """
 
-import argparse
 import logging
 import sys
 
-from newversion.cli_parser import parse_args
+from newversion.cli_parser import CLINamespace, parse_args
 from newversion.constants import LOGGER_NAME, Commands
 from newversion.exceptions import CLIError, ExecutorError
 from newversion.executor import Executor
@@ -25,14 +24,21 @@ def setup_logging(level: int) -> logging.Logger:
     return logger
 
 
-def main_api(config: argparse.Namespace) -> str:
+def main_api(config: CLINamespace) -> str:
     """
     Run main API entrypoint.
     """
-    executor = Executor(config.input)
+    executor = Executor(config.version)
     try:
-        if config.command in Commands.COMPARE:
-            executor.command_compare(config.command, config.other)
+        if config.command in (
+            Commands.LT,
+            Commands.LTE,
+            Commands.GT,
+            Commands.GTE,
+            Commands.EQ,
+            Commands.NE,
+        ):
+            executor.command_compare(config.command.value, config.other)
             return ""
         if config.command == Commands.IS_STABLE:
             executor.command_is_stable()
@@ -51,7 +57,7 @@ def main_api(config: argparse.Namespace) -> str:
         if config.command == Commands.STABLE:
             return executor.command_stable().dumps()
 
-        return config.input.dumps()
+        return config.version.dumps()
     except ExecutorError as e:
         raise CLIError(e) from None
 

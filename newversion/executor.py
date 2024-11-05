@@ -6,7 +6,7 @@ import operator
 from pathlib import Path
 from typing import Optional
 
-from newversion.constants import VersionParts
+from newversion.constants import Commands, VersionParts
 from newversion.exceptions import ExecutorError, PackageVersionError
 from newversion.package_version import PackageVersion
 from newversion.type_defs import OperatorTypeDef, ReleaseNonLocalTypeDef, ReleaseTypeDef
@@ -37,41 +37,46 @@ class Executor:
         Returns:
             Part as a string.
         """
-        if release == VersionParts.LOCAL:
+        try:
+            release_part = VersionParts(release)
+        except ValueError:
+            raise ExecutorError(f"Unknown release name: {release}") from None
+
+        if release_part == VersionParts.LOCAL:
             return self._input.local or ""
 
-        if release == VersionParts.PRE:
+        if release_part == VersionParts.PRE:
             return f"{self._input.pre[0]}{self._input.pre[1]}" if self._input.pre else ""
 
-        if release == VersionParts.POST:
+        if release_part == VersionParts.POST:
             return str(self._input.post) if self._input.post else "0"
 
-        if release == VersionParts.DEV:
+        if release_part == VersionParts.DEV:
             return str(self._input.dev) if self._input.dev else "0"
 
-        if release == VersionParts.ALPHA:
+        if release_part == VersionParts.ALPHA:
             return (
                 str(self._input.pre[-1]) if self._input.pre and self._input.pre[0] == "a" else "0"
             )
 
-        if release == VersionParts.BETA:
+        if release_part == VersionParts.BETA:
             return (
                 str(self._input.pre[-1]) if self._input.pre and self._input.pre[0] == "b" else "0"
             )
 
-        if release == VersionParts.RC:
+        if release_part == VersionParts.RC:
             return (
                 str(self._input.pre[-1]) if self._input.pre and self._input.pre[0] == "rc" else "0"
             )
 
-        if release == VersionParts.EPOCH:
+        if release_part == VersionParts.EPOCH:
             return str(self._input.epoch) if self._input.epoch else "0"
 
         result = {
-            "major": self._input.major,
-            "minor": self._input.minor,
-            "micro": self._input.micro,
-        }[release]
+            VersionParts.MAJOR: self._input.major,
+            VersionParts.MINOR: self._input.minor,
+            VersionParts.MICRO: self._input.micro,
+        }[release_part]
         return str(result)
 
     def command_bump(self, release: ReleaseNonLocalTypeDef, increment: int) -> Version:
@@ -85,19 +90,32 @@ class Executor:
         Returns:
             A new Version.
         """
-        if release in (VersionParts.MAJOR, VersionParts.MINOR, VersionParts.MICRO):
-            return self._input.bump_release(release, increment)
+        try:
+            release_part = VersionParts(release)
+        except ValueError:
+            raise ExecutorError(f"Unknown release name: {release}") from None
 
-        if release == VersionParts.PRE:
+        if release_part in (
+            VersionParts.MAJOR,
+            VersionParts.MINOR,
+            VersionParts.MICRO,
+        ):
+            return self._input.bump_release(release_part.value, increment)
+
+        if release_part == VersionParts.PRE:
             return self._input.bump_prerelease(increment)
 
-        if release == VersionParts.POST:
+        if release_part == VersionParts.POST:
             return self._input.bump_postrelease(increment)
 
-        if release in (VersionParts.RC, VersionParts.ALPHA, VersionParts.BETA):
-            return self._input.bump_prerelease(increment, release)
+        if release_part in (
+            VersionParts.RC,
+            VersionParts.ALPHA,
+            VersionParts.BETA,
+        ):
+            return self._input.bump_prerelease(increment, release_part.value)
 
-        if release == VersionParts.DEV:
+        if release_part == VersionParts.DEV:
             return self._input.bump_dev(increment)
 
         raise ExecutorError(f"Unknown release name: {release}")
@@ -113,36 +131,41 @@ class Executor:
         Returns:
             A new Version.
         """
-        if release == VersionParts.PRE:
-            if self._input.prerelease_type == VersionParts.ALPHA:
+        try:
+            release_part = VersionParts(release)
+        except ValueError:
+            raise ExecutorError(f"Unknown release name: {release}") from None
+
+        if release_part == VersionParts.PRE:
+            if self._input.prerelease_type == VersionParts.ALPHA.value:
                 return self._input.replace(alpha=value)
-            if self._input.prerelease_type == VersionParts.BETA:
+            if self._input.prerelease_type == VersionParts.BETA.value:
                 return self._input.replace(beta=value)
-            if self._input.prerelease_type == VersionParts.RC:
+            if self._input.prerelease_type == VersionParts.RC.value:
                 return self._input.replace(rc=value)
 
             return self._input.replace(rc=value)
 
-        if release == VersionParts.POST:
+        if release_part == VersionParts.POST:
             return self._input.replace(post=value)
-        if release == VersionParts.EPOCH:
+        if release_part == VersionParts.EPOCH:
             return self._input.replace(epoch=value)
-        if release == VersionParts.MAJOR:
+        if release_part == VersionParts.MAJOR:
             return self._input.replace(major=value)
-        if release == VersionParts.MINOR:
+        if release_part == VersionParts.MINOR:
             return self._input.replace(minor=value)
-        if release == VersionParts.MICRO:
+        if release_part == VersionParts.MICRO:
             return self._input.replace(micro=value)
-        if release == VersionParts.ALPHA:
+        if release_part == VersionParts.ALPHA:
             return self._input.replace(alpha=value)
-        if release == VersionParts.BETA:
+        if release_part == VersionParts.BETA:
             return self._input.replace(beta=value)
-        if release == VersionParts.RC:
+        if release_part == VersionParts.RC:
             return self._input.replace(rc=value)
-        if release == VersionParts.DEV:
+        if release_part == VersionParts.DEV:
             return self._input.replace(dev=value)
 
-        return self._input
+        raise ExecutorError(f"Unknown release name: {release}") from None
 
     def command_stable(self) -> Version:
         """
@@ -174,15 +197,16 @@ class Executor:
         Returns:
             Processed `Version`.
         """
+        command_enum = Commands(command)
         commands = {
-            "lt": (operator.lt, "not lesser than"),
-            "lte": (operator.le, "not lesser than or equal to"),
-            "gt": (operator.gt, "not greater than"),
-            "gte": (operator.ge, "not greater than or equal to"),
-            "eq": (operator.eq, "not equal to"),
-            "ne": (operator.ne, "equal to"),
+            Commands.LT: (operator.lt, "not lesser than"),
+            Commands.LTE: (operator.le, "not lesser than or equal to"),
+            Commands.GT: (operator.gt, "not greater than"),
+            Commands.GTE: (operator.ge, "not greater than or equal to"),
+            Commands.EQ: (operator.eq, "not equal to"),
+            Commands.NE: (operator.ne, "equal to"),
         }
-        op, message = commands[command]
+        op, message = commands[command_enum]
         if not (op(self._input, other)):
             raise ExecutorError(f"Version {self._input} is {message} {other}")
 

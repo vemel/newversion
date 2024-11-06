@@ -2,7 +2,7 @@
 Type definitions used in the newversion package.
 """
 
-from typing import Literal, NamedTuple, Optional, Tuple, Union
+from typing import Literal, NamedTuple, Optional, Union
 
 ReleaseTypeDef = Literal[
     "major",
@@ -59,8 +59,8 @@ class BaseVersion(NamedTuple):
     """
 
     epoch: int
-    release: Tuple[int, ...]
-    dev: Optional[Tuple[str, int]]
-    pre: Optional[Tuple[str, int]]
-    post: Optional[Tuple[str, int]]
-    local: Optional[Tuple[Union[int, str], ...]]
+    release: tuple[int, ...]
+    dev: Optional[tuple[str, int]]
+    pre: Optional[tuple[str, int]]
+    post: Optional[tuple[str, int]]
+    local: Optional[tuple[Union[int, str], ...]]

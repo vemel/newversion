@@ -91,8 +91,8 @@ class TestVersion:
 
     def test_command_set_version(self) -> None:
         with patch.object(PackageVersion, "set") as set_mock:
-            assert Executor(Version("1.2.3")).command_set_version() is None
+            assert Executor(Version("1.2.0")).command_set_version(Version("1.2.3")) is None
             set_mock.assert_called_with(Version("1.2.3"))
             set_mock.side_effect = PackageVersionError
             with pytest.raises(ExecutorError):
-                Executor(Version("1.2.3")).command_set_version()
+                Executor(Version("1.2.0")).command_set_version(Version("1.2.3"))

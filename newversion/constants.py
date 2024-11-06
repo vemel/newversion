@@ -25,6 +25,7 @@ class VersionParts(enum.Enum):
     MICRO = "micro"
     LOCAL = "local"
     EPOCH = "epoch"
+    FULL = "full"
 
 
 class Commands(enum.Enum):
@@ -46,3 +47,4 @@ class Commands(enum.Enum):
     STABLE = "stable"
     PACKAGE = "package"
     SET_PACKAGE = "set_package"
+    UNKNOWN = "unknown"

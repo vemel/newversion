@@ -6,9 +6,11 @@ import argparse
 import contextlib
 import enum
 import importlib.metadata
+import logging
 import sys
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Any, Optional, Sequence, Type, Union
+from typing import Any, Optional, Union
 
 from newversion.constants import PACKAGE_NAME, Commands, VersionParts
 from newversion.type_defs import ReleaseNonLocalTypeDef
@@ -54,8 +56,9 @@ class CLINamespace:
     increment: int
     other: Version
     value: int
-    verbose: bool
-    quiet: bool
+    log_level: int
+    package: bool
+    save: bool
 
 
 class EnumListAction(argparse.Action):
@@ -66,16 +69,20 @@ class EnumListAction(argparse.Action):
     def __init__(
         self,
         *,
-        type: Type[enum.Enum],  # noqa: A002
+        type: type[enum.Enum],  # noqa: A002
         option_strings: Sequence[str],
         dest: str,
         default: Optional[Sequence[enum.Enum]] = None,
         required: bool = False,
         choices: Optional[Sequence[enum.Enum]] = None,
+        nargs: Union[str, int, None] = None,
         **kwargs: Optional[str],
     ) -> None:
         self._enum_class = type
         super_choices = choices if choices is not None else list(self._enum_class)
+        self._is_singular = default is not None and nargs is None
+        if self._is_singular:
+            nargs = "?"
 
         super().__init__(
             choices=tuple(e.value for e in super_choices),
@@ -84,6 +91,7 @@ class EnumListAction(argparse.Action):
             dest=dest,
             type=None,
             required=required,
+            nargs=nargs,
             **kwargs,
         )
 
@@ -103,6 +111,12 @@ class EnumListAction(argparse.Action):
         if isinstance(value, list):
             value_list.extend([i for i in value if isinstance(i, str)])
         enum_values = [self._enum_class(i) for i in value_list]
+
+        if self._is_singular:
+            enum_values = enum_values[0] if enum_values else self.default
+        else:
+            enum_values = enum_values or self.default
+
         setattr(namespace, self.dest, enum_values)
 
 
@@ -128,6 +142,21 @@ def parse_args(args: Sequence[str]) -> CLINamespace:
         default=None,
         help="Input version, can be provided as a pipe-in as well.",
     )
+    parser.add_argument(
+        "-p",
+        "--package",
+        action="store_true",
+        help="Get or set Python package version. Supports pyproject.toml, setup.cfg and setup.py.",
+    )
+    parser.add_argument(
+        "-s",
+        "--save",
+        action="store_true",
+        help=(
+            "Set output version as Python package version."
+            " Supports pyproject.toml, setup.cfg and setup.py."
+        ),
+    )
     parser.add_argument("-v", "--verbose", action="store_true", help="Verbose logging")
     parser.add_argument("-q", "--quiet", action="store_true", help="No logging")
 
@@ -148,7 +177,6 @@ def parse_args(args: Sequence[str]) -> CLINamespace:
             VersionParts.BETA,
             VersionParts.DEV,
         ],
-        nargs="?",
         default=VersionParts.MICRO,
         help=f"Release type. Default: {VersionParts.MICRO.value}",
     )
@@ -165,6 +193,7 @@ def parse_args(args: Sequence[str]) -> CLINamespace:
         "release",
         type=VersionParts,
         action=EnumListAction,
+        default=VersionParts.FULL,
         help="Release type",
     )
 
@@ -192,6 +221,7 @@ def parse_args(args: Sequence[str]) -> CLINamespace:
         Commands.PACKAGE.value,
         help="Get Python package version. Supports pyproject.toml, setup.cfg and setup.py.",
     )
+
     subparsers.add_parser(
         Commands.SET_PACKAGE.value,
         help="Set Python package version. Supports pyproject.toml, setup.cfg and setup.py.",
@@ -262,13 +292,18 @@ def parse_args(args: Sequence[str]) -> CLINamespace:
     if result.version is None:
         result.version = get_stdin()
 
+    log_level = logging.DEBUG if result.verbose else logging.INFO
+    if result.quiet:
+        log_level = logging.CRITICAL
+
     return CLINamespace(
         version=result.version,
-        command=Commands(result.command),
-        release=getattr(result, "release", "major"),
+        command=Commands(result.command) if result.command else Commands.UNKNOWN,
+        release=result.release if getattr(result, "release", "") else VersionParts.MICRO.value,
         increment=getattr(result, "increment", 1),
         other=getattr(result, "other", Version.zero()),
         value=getattr(result, "value", 1),
-        verbose=result.verbose,
-        quiet=result.quiet,
+        log_level=log_level,
+        package=result.package,
+        save=result.save,
     )

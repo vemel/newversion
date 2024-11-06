@@ -8,7 +8,7 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/newversion.svg?color=blue)](https://pypi.org/project/newversion)
 [![Coverage](https://img.shields.io/codecov/c/github/vemel/newversion)](https://codecov.io/gh/vemel/newversion)
 
-- [NewVersion - Your version manager](#newversion---your-version-manager)
+- [NewVersion - PEP 440 version manager](#newversion---pep-440-version-manager)
   - [Features](#features)
   - [Installation](#installation)
   - [Usage](#usage)
@@ -40,13 +40,14 @@ newversion            # 0.0.0
 newversion bump major # 1.0.0
 
 # get package version from pyproject.toml, setup.cfg or setup.py
-newversion package # 1.2.3
-newversion package | newversion bump  # 1.2.4
-newversion package | newversion get minor  # 2
+newversion -p # 1.2.3
+newversion -p bump # 1.2.4
+newversion -p bump pre # 1.2.4rc1
+newversion -p get minor  # 2
 
 
 # bump minor version and update package version
-newversion package | newversion bump minor | newversion set_package
+newversion -p --save bump minor
 
 echo "1.2.3rc1" | newversion bump micro   # 1.2.3
 echo "1.2.3rc1" | newversion bump minor   # 1.3.0

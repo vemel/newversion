@@ -2,7 +2,7 @@
 Extended `packaging.version.Version` implementation.
 """
 
-from typing import Any, Dict, Optional, Tuple, Type, TypeVar, Union
+from typing import Any, Optional, Union
 
 import packaging.version
 from typing_extensions import Self
@@ -15,8 +15,6 @@ from newversion.type_defs import (
     ReleaseMainPostTypeDef,
     ReleaseMainTypeDef,
 )
-
-_R = TypeVar("_R", bound="Version")
 
 
 class VersionError(packaging.version.InvalidVersion):
@@ -37,7 +35,7 @@ class Version(packaging.version.Version):
             raise VersionError(e) from None
 
     @classmethod
-    def zero(cls: Type[_R]) -> _R:
+    def zero(cls) -> Self:
         """
         Get zero version `0.0.0`.
         """
@@ -333,7 +331,7 @@ class Version(packaging.version.Version):
             A new copy.
         """
         post = (VersionParts.POST.value, max(inc, 1))
-        base_post: Optional[Tuple[str, int]] = self._version.post
+        base_post: Optional[tuple[str, int]] = self._version.post
         if base_post:
             post = (VersionParts.POST.value, max(base_post[1], 1) + inc)
         base = BaseVersion(
@@ -384,7 +382,7 @@ class Version(packaging.version.Version):
         Returns:
             A new instance.
         """
-        kwargs: Dict[str, Any] = {
+        kwargs: dict[str, Any] = {
             "release": (
                 major if major is not None else self.major,
                 minor if minor is not None else self.minor,
@@ -447,11 +445,11 @@ class Version(packaging.version.Version):
         self,
         *,
         epoch: Optional[int] = None,
-        release: Optional[Tuple[int, ...]] = None,
-        dev: Optional[Tuple[str, int]] = None,
-        pre: Optional[Tuple[str, int]] = None,
-        post: Optional[Tuple[str, int]] = None,
-        local: Optional[Tuple[Union[int, str], ...]] = None,
+        release: Optional[tuple[int, ...]] = None,
+        dev: Optional[tuple[str, int]] = None,
+        pre: Optional[tuple[str, int]] = None,
+        post: Optional[tuple[str, int]] = None,
+        local: Optional[tuple[Union[int, str], ...]] = None,
     ) -> BaseVersion:
         return BaseVersion(
             epoch=epoch if epoch is not None else self.base.epoch,

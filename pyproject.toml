@@ -1,7 +1,7 @@
 [project]
 name = "newversion"
 version = "2.0.0"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 description = "PEP 440 version manager"
 authors = [{ name = "Vlad Emelianov", email = "vlad.emelianov.nz@gmail.com" }]
 license = { file = "LICENSE" }
@@ -19,6 +19,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: Implementation :: CPython",
     "Typing :: Typed",
@@ -68,7 +69,7 @@ omit = [".venv/*", "tests/*"]
 [tool.pyright]
 include = ["newversion"]
 exclude = ["**/__pycache__", "tests", "**/build", "typings"]
-pythonVersion = "3.8"
+pythonVersion = "3.9"
 typeCheckingMode = "strict"
 reportMissingImports = "error"
 reportMissingTypeStubs = "error"
@@ -93,7 +94,7 @@ exclude = [
 
 line-length = 100
 indent-width = 4
-target-version = "py38"
+target-version = "py39"
 
 [tool.ruff.lint]
 preview = true

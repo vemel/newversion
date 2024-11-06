@@ -13,7 +13,6 @@ from dataclasses import dataclass
 from typing import Any, Optional, Union
 
 from newversion.constants import PACKAGE_NAME, Commands, VersionParts
-from newversion.type_defs import ReleaseNonLocalTypeDef
 from newversion.version import Version
 
 
@@ -52,7 +51,7 @@ class CLINamespace:
 
     version: Version
     command: Commands
-    release: ReleaseNonLocalTypeDef
+    release: VersionParts
     increment: int
     other: Version
     value: int
@@ -299,7 +298,9 @@ def parse_args(args: Sequence[str]) -> CLINamespace:
     return CLINamespace(
         version=result.version,
         command=Commands(result.command) if result.command else Commands.UNKNOWN,
-        release=result.release if getattr(result, "release", "") else VersionParts.MICRO.value,
+        release=VersionParts(result.release)
+        if getattr(result, "release", "")
+        else VersionParts.MICRO,
         increment=getattr(result, "increment", 1),
         other=getattr(result, "other", Version.zero()),
         value=getattr(result, "value", 1),

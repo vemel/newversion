@@ -89,7 +89,7 @@ class Version(packaging.version.Version):
 
     def bump_release(
         self,
-        release_type: ReleaseMainTypeDef = "micro",
+        release_type: ReleaseMainTypeDef = VersionParts.MICRO.value,
         inc: int = 1,
     ) -> Self:
         """
@@ -251,7 +251,7 @@ class Version(packaging.version.Version):
             dev_version = self.dev or 0
             return self.replace(dev=(dev_version + inc))
 
-        if bump_release == "post" or self.is_postrelease:
+        if bump_release == VersionParts.POST.value or self.is_postrelease:
             # this is a postrelease or we want to create one
             return self.bump_postrelease().replace(dev=(inc - 1))
 
@@ -265,7 +265,7 @@ class Version(packaging.version.Version):
         self,
         inc: int = 1,
         release_type: Optional[PrereleaseLooseTypeDef] = None,
-        bump_release: ReleaseMainTypeDef = "micro",
+        bump_release: ReleaseMainTypeDef = VersionParts.MICRO.value,
     ) -> Self:
         """
         Get next prerelease version.

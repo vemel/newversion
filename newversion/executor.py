@@ -21,7 +21,9 @@ class Executor:
     def __init__(
         self,
         version: Optional[Version] = None,
+        path: Optional[Path] = None,
     ) -> None:
+        self.path = path or Path.cwd()
         self.version = version if version is not None else Version.zero()
 
     def command_get(
@@ -219,7 +221,7 @@ class Executor:
             ExecutorError: If there is an error retrieving the package version.
         """
         try:
-            return PackageVersion(Path.cwd()).get()
+            return PackageVersion(self.path).get()
         except PackageVersionError as e:
             raise ExecutorError(e) from None
 
@@ -235,6 +237,6 @@ class Executor:
             ExecutorError: If there is an error setting the package version.
         """
         try:
-            PackageVersion(Path.cwd()).set(version)
+            PackageVersion(self.path).set(version)
         except PackageVersionError as e:
             raise ExecutorError(e) from None

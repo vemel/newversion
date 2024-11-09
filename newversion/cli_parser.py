@@ -10,6 +10,7 @@ import logging
 import sys
 from collections.abc import Sequence
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, Optional, Union
 
 from newversion.constants import PACKAGE_NAME, Commands, VersionParts
@@ -58,6 +59,7 @@ class CLINamespace:
     log_level: int
     package: bool
     save: bool
+    path: Path
 
 
 class EnumListAction(argparse.Action):
@@ -155,6 +157,12 @@ def parse_args(args: Sequence[str]) -> CLINamespace:
             "Set output version as Python package version."
             " Supports pyproject.toml, setup.cfg and setup.py."
         ),
+    )
+    parser.add_argument(
+        "--path",
+        type=Path,
+        default=Path.cwd(),
+        help="Path to Python package root. Default: current working directory.",
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Verbose logging")
     parser.add_argument("-q", "--quiet", action="store_true", help="No logging")
@@ -307,4 +315,5 @@ def parse_args(args: Sequence[str]) -> CLINamespace:
         log_level=log_level,
         package=result.package,
         save=result.save,
+        path=result.path,
     )

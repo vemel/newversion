@@ -47,7 +47,10 @@ def main_api(config: CLINamespace) -> str:
     """
     Run main API entrypoint.
     """
-    executor = Executor(config.version)
+    executor = Executor(
+        version=config.version,
+        path=config.path,
+    )
     if config.package:
         executor.version = executor.command_get_version()
     try:

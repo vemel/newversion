@@ -6,7 +6,7 @@ import operator
 from pathlib import Path
 from typing import Optional
 
-from newversion.constants import Commands, VersionParts
+from newversion.constants import Commands, Prerelease, VersionParts
 from newversion.exceptions import ExecutorError, PackageVersionError
 from newversion.package_version import PackageVersion
 from newversion.type_defs import OperatorTypeDef
@@ -54,21 +54,21 @@ class Executor:
         if release == VersionParts.ALPHA:
             return (
                 str(self.version.pre[-1])
-                if self.version.pre and self.version.pre[0] == "a"
+                if self.version.pre and self.version.pre[0] == Prerelease.A
                 else "0"
             )
 
         if release == VersionParts.BETA:
             return (
                 str(self.version.pre[-1])
-                if self.version.pre and self.version.pre[0] == "b"
+                if self.version.pre and self.version.pre[0] == Prerelease.B
                 else "0"
             )
 
         if release == VersionParts.RC:
             return (
                 str(self.version.pre[-1])
-                if self.version.pre and self.version.pre[0] == "rc"
+                if self.version.pre and self.version.pre[0] == Prerelease.RC
                 else "0"
             )
 
@@ -133,35 +133,23 @@ class Executor:
             A new Version.
         """
         if release == VersionParts.PRE:
-            if self.version.prerelease_type == VersionParts.ALPHA.value:
-                return self.version.replace(alpha=value)
-            if self.version.prerelease_type == VersionParts.BETA.value:
-                return self.version.replace(beta=value)
-            if self.version.prerelease_type == VersionParts.RC.value:
-                return self.version.replace(rc=value)
+            return self.version.replace(
+                alpha=value if self.version.prerelease_type == VersionParts.ALPHA.value else None,
+                beta=value if self.version.prerelease_type == VersionParts.BETA.value else None,
+                rc=value if self.version.prerelease_type in {VersionParts.RC.value, None} else None,
+            )
 
-            return self.version.replace(rc=value)
-
-        if release == VersionParts.POST:
-            return self.version.replace(post=value)
-        if release == VersionParts.EPOCH:
-            return self.version.replace(epoch=value)
-        if release == VersionParts.MAJOR:
-            return self.version.replace(major=value)
-        if release == VersionParts.MINOR:
-            return self.version.replace(minor=value)
-        if release == VersionParts.MICRO:
-            return self.version.replace(micro=value)
-        if release == VersionParts.ALPHA:
-            return self.version.replace(alpha=value)
-        if release == VersionParts.BETA:
-            return self.version.replace(beta=value)
-        if release == VersionParts.RC:
-            return self.version.replace(rc=value)
-        if release == VersionParts.DEV:
-            return self.version.replace(dev=value)
-
-        raise ExecutorError(f"Unknown release name: {release}") from None
+        return self.version.replace(
+            post=value if release == VersionParts.POST else None,
+            epoch=value if release == VersionParts.EPOCH else None,
+            major=value if release == VersionParts.MAJOR else None,
+            minor=value if release == VersionParts.MINOR else None,
+            micro=value if release == VersionParts.MICRO else None,
+            alpha=value if release == VersionParts.ALPHA else None,
+            beta=value if release == VersionParts.BETA else None,
+            rc=value if release == VersionParts.RC else None,
+            dev=value if release == VersionParts.DEV else None,
+        )
 
     def command_stable(self) -> Version:
         """

@@ -9,6 +9,16 @@ PACKAGE_NAME: Final = "newversion"
 LOGGER_NAME: Final = "newversion"
 
 
+class Prerelease:
+    """
+    Pre-release constants as they are named in PEP 440.
+    """
+
+    A: Final = "a"
+    B: Final = "b"
+    RC: Final = "rc"
+
+
 class VersionParts(enum.Enum):
     """
     Utility class with constants for version parts.

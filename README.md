@@ -12,6 +12,7 @@
   - [Features](#features)
   - [Installation](#installation)
   - [Usage](#usage)
+    - [uv](#uv)
     - [CLI](#cli)
     - [Python library](#python-library)
   - [Versioning](#versioning)
@@ -32,6 +33,26 @@ python -m pip install newversion
 ```
 
 ## Usage
+
+### uv
+
+```bash
+# bump Python package micro version and update package version
+# 1.2.3 -> 1.2.4
+uvx newversion -p bump --save
+
+# bump Python package minor version and update package version
+# 1.2.3 -> 1.3.0
+uvx newversion -p bump minor --save
+
+# bump Python package major version and update package version
+# 1.2.3 -> 2.0.0
+uvx newversion -p bump major --save
+
+# bump Python package RC pre-release version and update package version
+# 1.2.3 -> 1.2.4rc1
+uvx newversion -p bump pre --save
+```
 
 ### CLI
 

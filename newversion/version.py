@@ -7,7 +7,7 @@ from typing import Any, Optional, Union
 import packaging.version
 from typing_extensions import Self
 
-from newversion.constants import VersionParts
+from newversion.constants import Prerelease, VersionParts
 from newversion.type_defs import (
     BaseVersion,
     PrereleaseLooseTypeDef,
@@ -56,11 +56,11 @@ class Version(packaging.version.Version):
             return None
 
         letter = self.pre[0]
-        if letter == "rc":
+        if letter == Prerelease.RC:
             return VersionParts.RC.value
-        if letter == "a":
+        if letter == Prerelease.A:
             return VersionParts.ALPHA.value
-        if letter == "b":
+        if letter == Prerelease.B:
             return VersionParts.BETA.value
 
         return None

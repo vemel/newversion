@@ -131,9 +131,7 @@ select = [
     "PL",   # pylint
 ]
 ignore = [
-    "C901",
     "PLR0911",
-    "PLR0912",
     "PLR6201",
     "D107",    # undocumented-public-init
     "D200",    # fits-on-one-line

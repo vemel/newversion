@@ -30,7 +30,6 @@ dependencies = ["packaging>=20.0", "typing_extensions>=4.1.0"]
 
 [project.optional-dependencies]
 build = ["setuptools"]
-check = ["boto3-stubs", "types-aiobotocore", "types-aioboto3"]
 
 [tool.uv]
 dev-dependencies = ["ruff", "pyright", "pytest-cov", "pytest"]

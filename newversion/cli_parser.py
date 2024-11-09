@@ -147,7 +147,10 @@ def parse_args(args: Sequence[str]) -> CLINamespace:
         "-p",
         "--package",
         action="store_true",
-        help="Get or set Python package version. Supports pyproject.toml, setup.cfg and setup.py.",
+        help=(
+            "Get Python package version as input, overrides --input and pipe in."
+            " Supports pyproject.toml, setup.cfg and setup.py."
+        ),
     )
     parser.add_argument(
         "-s",

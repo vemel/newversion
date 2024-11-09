@@ -51,7 +51,7 @@ def main_api(config: CLINamespace) -> str:
         version=config.version,
         path=config.path,
     )
-    if config.package and config.version == Version.zero():
+    if config.package:
         executor.version = executor.command_get_version()
     try:
         result = _run_main_api(executor, config)

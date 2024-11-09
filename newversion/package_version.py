@@ -37,15 +37,17 @@ class PackageVersion:
         return self._path / "setup.cfg"
 
     @property
-    def _pyproject_path(self) -> Path:
+    def _pyproject_toml_path(self) -> Path:
         return self._path / "pyproject.toml"
 
     def _get_from_pyproject(self) -> Optional[Version]:
-        if not self._pyproject_path.exists():
+        if not self._pyproject_toml_path.exists():
             return None
 
-        self._logger.debug(f"Found {print_path(self._pyproject_path)}, extracting version from it")
-        text = self._pyproject_path.read_text()
+        self._logger.debug(
+            f"Found {print_path(self._pyproject_toml_path)}, extracting version from it"
+        )
+        text = self._pyproject_toml_path.read_text()
         for line in text.splitlines():
             if not line.startswith("version"):
                 continue
@@ -61,10 +63,10 @@ class PackageVersion:
         return None
 
     def _set_in_pyproject(self, version: Version) -> None:
-        if not self._pyproject_path.exists():
+        if not self._pyproject_toml_path.exists():
             return
 
-        text = self._pyproject_path.read_text()
+        text = self._pyproject_toml_path.read_text()
         line_ending = EOLFixer.get_line_ending(text)
         lines: list[str] = []
         changed = False
@@ -79,17 +81,24 @@ class PackageVersion:
                 continue
 
             old_version = match.group(1)
+            new_version = version.dumps()
+            if old_version == new_version:
+                self._logger.info(
+                    f"Version in {print_path(self._pyproject_toml_path)}"
+                    f" is already set to {new_version}, no change needed"
+                )
+                return
             self._logger.info(
-                f"Changing version in {print_path(self._pyproject_path)}"
-                f" from {old_version} to {version.dumps()}"
+                f"Changing version in {print_path(self._pyproject_toml_path)}"
+                f" from {old_version} to {new_version}"
             )
-            new_line = line.replace(old_version, version.dumps())
+            new_line = line.replace(old_version, new_version)
             lines.append(new_line)
             changed = True
 
         if changed:
             text = EOLFixer.add_newline(line_ending.join(lines))
-            self._pyproject_path.write_text(text)
+            self._pyproject_toml_path.write_text(text)
 
     def _get_from_setup_cfg(self) -> Optional[Version]:
         if not self._setup_cfg_path.exists():
@@ -143,9 +152,16 @@ class PackageVersion:
                 continue
 
             old_version = match.group(1)
+            new_version = version.dumps()
+            if old_version == new_version:
+                self._logger.info(
+                    f"Version in {print_path(self._setup_cfg_path)}"
+                    f" is already set to {new_version}, no change needed"
+                )
+                return
             self._logger.info(
                 f"Changing version in {print_path(self._setup_cfg_path)}"
-                f" from {old_version} to {version.dumps()}"
+                f" from {old_version} to {new_version}"
             )
             new_line = line.replace(old_version, version.dumps())
             lines.append(new_line)
@@ -194,6 +210,13 @@ class PackageVersion:
                 continue
 
             old_version = match.group(1)
+            new_version = version.dumps()
+            if old_version == new_version:
+                self._logger.info(
+                    f"Version in {print_path(self._setup_py_path)}"
+                    f" is already set to {new_version}, no change needed"
+                )
+                return
             self._logger.info(
                 f"Changing version in {print_path(self._setup_py_path)}"
                 f" from {old_version} to {version.dumps()}"

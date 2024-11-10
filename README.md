@@ -52,6 +52,10 @@ uvx newversion -p bump major --save
 # bump Python package RC pre-release version and update package version
 # 1.2.3 -> 1.2.4rc1
 uvx newversion -p bump pre --save
+
+# set commit hash as local and update package version
+# 1.2.3 -> 1.2.3+956a81a
+uvx newversion -p set local ${COMMIT_SHA} --save
 ```
 
 ### CLI

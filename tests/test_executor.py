@@ -3,7 +3,13 @@ from unittest.mock import patch
 import pytest
 
 from newversion.constants import VersionParts
-from newversion.exceptions import ExecutorError, PackageVersionError
+from newversion.exceptions import (
+    ComparisonFailedError,
+    ExecutorError,
+    PackageVersionError,
+    ReleaseCannotBeBumpedError,
+    VersionIsNotStableError,
+)
 from newversion.executor import Executor
 from newversion.package_version import PackageVersion
 from newversion.version import Version
@@ -42,7 +48,7 @@ class TestVersion:
         assert Executor(Version("1.2.3")).command_is_stable() is None
         assert Executor(Version("1.2.3.post3")).command_is_stable() is None
         assert Executor(Version("123!1.2.3.post3")).command_is_stable() is None
-        with pytest.raises(ExecutorError):
+        with pytest.raises(VersionIsNotStableError):
             Executor(Version("1.2.3a4")).command_is_stable()
 
     def test_command_compare(self) -> None:
@@ -52,7 +58,7 @@ class TestVersion:
         assert Executor(Version("1.2.3")).command_compare("gt", Version("1.2.0")) is None
         assert Executor(Version("1.2.3")).command_compare("gte", Version("1.2.3")) is None
         assert Executor(Version("1.2.3")).command_compare("eq", Version("1.2.3")) is None
-        with pytest.raises(ExecutorError):
+        with pytest.raises(ComparisonFailedError):
             Executor(Version("1.2.3")).command_compare("ne", Version("1.2.3"))
 
     def test_command_set(self) -> None:
@@ -95,8 +101,8 @@ class TestVersion:
             "1.2.3.post6"
         )
         assert Executor(Version("1.2.3")).command_bump(VersionParts.DEV, 1) == Version("1.2.4.dev0")
-        with pytest.raises(ExecutorError):
-            Executor(Version("1.2.3.post5")).command_bump("unknown", 1)  # type: ignore
+        with pytest.raises(ReleaseCannotBeBumpedError):
+            Executor(Version("1.2.3.post5")).command_bump(VersionParts.EPOCH, 1)
 
     def test_command_get_version(self) -> None:
         with patch.object(PackageVersion, "get") as get_mock:

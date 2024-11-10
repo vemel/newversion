@@ -17,7 +17,7 @@ class EOLFixer:
         Check whether text has `\r\n` characters.
 
         Arguments:
-            text -- Text to check.
+            text: Text to check.
         """
         return cls.CRLF in text
 
@@ -27,7 +27,7 @@ class EOLFixer:
         Convert `\r\n` to `\n`.
 
         Arguments:
-            text -- Text to convert.
+            text: Text to convert.
 
         Returns:
             Converted text.
@@ -43,7 +43,7 @@ class EOLFixer:
         Convert `\n` to `\r\n`.
 
         Arguments:
-            text -- Text to convert.
+            text: Text to convert.
 
         Returns:
             Converted text.

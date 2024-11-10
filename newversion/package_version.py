@@ -259,7 +259,7 @@ class PackageVersion:
         if result:
             return result
 
-        raise PackageVersionError("Cannot get Python package version.")
+        raise PackageVersionError
 
     def set(self, version: Version) -> None:
         """

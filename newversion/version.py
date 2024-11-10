@@ -96,8 +96,8 @@ class Version(packaging.version.Version):
         Get next release version.
 
         Arguments:
-            release_type -- Release type: major, minor, micro.
-            inc -- Increment for major version.
+            release_type: Release type: major, minor, micro.
+            inc: Increment for major version.
 
         Examples:
             ```python
@@ -121,7 +121,7 @@ class Version(packaging.version.Version):
         Get next major version.
 
         Arguments:
-            inc -- Increment for major version.
+            inc: Increment for major version.
 
         Examples:
             ```python
@@ -154,7 +154,7 @@ class Version(packaging.version.Version):
         Get next minor version.
 
         Arguments:
-            inc -- Increment for minor version.
+            inc: Increment for minor version.
 
         Examples:
             ```python
@@ -189,7 +189,7 @@ class Version(packaging.version.Version):
         Get next micro version.
 
         Arguments:
-            inc -- Increment for micro version.
+            inc: Increment for micro version.
 
         Examples:
             ```python
@@ -229,8 +229,8 @@ class Version(packaging.version.Version):
         Defaults to bumping `micro`, falls back automatically to `post`
 
         Arguments:
-            inc -- Increment for dev version.
-            bump_release -- Release number to bump if version is stable.
+            inc: Increment for dev version.
+            bump_release: Release number to bump if version is stable.
 
         Examples:
             ```python
@@ -274,9 +274,9 @@ class Version(packaging.version.Version):
         Defaults to `rc` pre-releases.
 
         Arguments:
-            inc -- Increment for micro version.
-            release_type -- Prerelease type: alpha, beta, rc.
-            bump_release -- Release number to bump if version is stable.
+            inc: Increment for micro version.
+            release_type: Prerelease type: alpha, beta, rc.
+            bump_release: Release number to bump if version is stable.
 
         Examples:
             ```python
@@ -317,7 +317,7 @@ class Version(packaging.version.Version):
         Get next postrelease version.
 
         Arguments:
-            inc -- Increment for micro version.
+            inc: Increment for micro version.
 
         Examples:
             ```python
@@ -368,16 +368,16 @@ class Version(packaging.version.Version):
             ```
 
         Arguments:
-            major -- Major release number.
-            minor -- Minor release number.
-            micro -- Micro release number.
-            alpha -- Alpha pre-release number.
-            beta -- Beta pre-release number.
-            rc -- RC pre-release number.
-            dev -- Dev release number.
-            post -- Post release number.
-            epoch -- Release epoch.
-            local -- Local release identifier.
+            major: Major release number.
+            minor: Minor release number.
+            micro: Micro release number.
+            alpha: Alpha pre-release number.
+            beta: Beta pre-release number.
+            rc: RC pre-release number.
+            dev: Dev release number.
+            post: Post release number.
+            epoch: Release epoch.
+            local: Local release identifier.
 
         Returns:
             A new instance.

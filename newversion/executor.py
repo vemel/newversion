@@ -7,7 +7,13 @@ from pathlib import Path
 from typing import Optional
 
 from newversion.constants import Commands, Prerelease, VersionParts
-from newversion.exceptions import ExecutorError, PackageVersionError
+from newversion.exceptions import (
+    ComparisonFailedError,
+    ExecutorError,
+    PackageVersionError,
+    ReleaseCannotBeBumpedError,
+    VersionIsNotStableError,
+)
 from newversion.package_version import PackageVersion
 from newversion.type_defs import OperatorTypeDef
 from newversion.version import Version
@@ -34,7 +40,7 @@ class Executor:
         Get version part.
 
         Arguments:
-            release -- Release part name.
+            release: Release part name.
 
         Returns:
             Part as a string.
@@ -90,8 +96,8 @@ class Executor:
         Bump release.
 
         Arguments:
-            release -- Release name
-            increment -- Number to increase by
+            release: Release name
+            increment: Number to increase by
 
         Returns:
             A new Version.
@@ -119,15 +125,15 @@ class Executor:
         if release == VersionParts.DEV:
             return self.version.bump_dev(increment)
 
-        raise ExecutorError(f"Unknown release name: {release}")
+        raise ReleaseCannotBeBumpedError(release)
 
     def command_set(self, release: VersionParts, value: int) -> Version:
         """
         Set version part.
 
         Arguments:
-            release -- Release name
-            value -- Value to set
+            release: Release name
+            value: Value to set
 
         Returns:
             A new Version.
@@ -165,34 +171,34 @@ class Executor:
         Check whether version is stable.
 
         Raises:
-            ExecutorError -- If it is not.
+            ExecutorError: If it is not.
         """
         if not self.version.is_stable:
-            raise ExecutorError(f"Version {self.version} is not stable")
+            raise VersionIsNotStableError(self.version)
 
     def command_compare(self, command: OperatorTypeDef, other: Version) -> None:
         """
         Execute compare command.
 
         Arguments:
-            command -- Compare operator.
-            other -- Version to compare to.
+            command: Compare operator.
+            other: Version to compare to.
 
         Returns:
             Processed `Version`.
         """
         command_enum = Commands(command)
-        commands = {
-            Commands.LT: (operator.lt, "not lesser than"),
-            Commands.LTE: (operator.le, "not lesser than or equal to"),
-            Commands.GT: (operator.gt, "not greater than"),
-            Commands.GTE: (operator.ge, "not greater than or equal to"),
-            Commands.EQ: (operator.eq, "not equal to"),
-            Commands.NE: (operator.ne, "equal to"),
+        operators = {
+            Commands.LT: operator.lt,
+            Commands.LTE: operator.le,
+            Commands.GT: operator.gt,
+            Commands.GTE: operator.ge,
+            Commands.EQ: operator.eq,
+            Commands.NE: operator.ne,
         }
-        op, message = commands[command_enum]
+        op = operators[command_enum]
         if not (op(self.version, other)):
-            raise ExecutorError(f"Version {self.version} is {message} {other}")
+            raise ComparisonFailedError(command_enum, self.version, other)
 
     def command_get_version(self) -> Version:
         """

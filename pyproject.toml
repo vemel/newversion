@@ -131,8 +131,7 @@ select = [
     "PL",   # pylint
 ]
 ignore = [
-    "PLR0911",
-    "PLR6201",
+
     "D107",    # undocumented-public-init
     "D200",    # fits-on-one-line
     "D203",    # one-blank-line-before-class
@@ -140,18 +139,10 @@ ignore = [
     "D406",    # new-line-after-section-name
     "D407",    # dashed-underline-after-section
     "D413",    # blank-line-after-last-section
-    "D417",    # undocumented-param
-    "S310",    # suspicious-url-open-usage
-    "S404",    # suspicious-subprocess-import
-    "S603",    # subprocess-without-shell-equals-true
-    "ANN101",  # missing-type-self
-    "ANN102",  # missing-type-cls
-    # "ANN401",  # any-type
-    "TRY003",  # raise-vanilla-args
-    "PERF203", # try-except-in-loop
-    "PLR0913", # too-many-arguments
     "PLR0904", # too-many-public-methods
-    "PLR6301", # no-self-use
+    "PLR0911", # too-many-return-statements
+    "PLR0913", # too-many-arguments
+    "PLR6201", # literal-membership
 ]
 fixable = ["ALL"]
 unfixable = ["B"]
@@ -163,6 +154,7 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
     "S101",    # use-of-assert
     "N803",    # argument-name-does-not-match
     "PLR2004", # constant-comparison
+    "PLR6301", # no-self-use
 ]
 
 [tool.ruff.format]

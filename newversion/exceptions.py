@@ -65,3 +65,13 @@ class ReleaseCannotBeBumpedError(ExecutorError):
     def __init__(self, release: VersionParts) -> None:
         self.message = f"Unsupported release {release.value} for bump operation"
         super().__init__(self.message)
+
+
+class ValueMustBeIntError(ExecutorError):
+    """
+    Value must be integer error.
+    """
+
+    def __init__(self, release: VersionParts, value: str) -> None:
+        self.message = f"Value for {release.value} must be a number, got: {value}"
+        super().__init__(self.message)

@@ -62,25 +62,33 @@ class TestVersion:
             Executor(Version("1.2.3")).command_compare("ne", Version("1.2.3"))
 
     def test_command_set(self) -> None:
-        assert Executor(Version("1.2.3")).command_set(VersionParts.MAJOR, 3) == Version("3.2.3")
-        assert Executor(Version("1.2.3")).command_set(VersionParts.MINOR, 3) == Version("1.3.3")
-        assert Executor(Version("1.2.3")).command_set(VersionParts.MICRO, 4) == Version("1.2.4")
-        assert Executor(Version("1.2.3")).command_set(VersionParts.PRE, 4) == Version("1.2.3rc4")
-        assert Executor(Version("1.2.3rc2")).command_set(VersionParts.PRE, 4) == Version("1.2.3rc4")
-        assert Executor(Version("1.2.3a2")).command_set(VersionParts.PRE, 4) == Version("1.2.3a4")
-        assert Executor(Version("1.2.3b2")).command_set(VersionParts.PRE, 4) == Version("1.2.3b4")
-        assert Executor(Version("1.2.3")).command_set(VersionParts.EPOCH, 1234) == Version(
+        assert Executor(Version("1.2.3")).command_set(VersionParts.MAJOR, "3") == Version("3.2.3")
+        assert Executor(Version("1.2.3")).command_set(VersionParts.MINOR, "3") == Version("1.3.3")
+        assert Executor(Version("1.2.3")).command_set(VersionParts.MICRO, "4") == Version("1.2.4")
+        assert Executor(Version("1.2.3")).command_set(VersionParts.PRE, "4") == Version("1.2.3rc4")
+        assert Executor(Version("1.2.3rc2")).command_set(VersionParts.PRE, "4") == Version(
+            "1.2.3rc4"
+        )
+        assert Executor(Version("1.2.3a2")).command_set(VersionParts.PRE, "4") == Version("1.2.3a4")
+        assert Executor(Version("1.2.3b2")).command_set(VersionParts.PRE, "4") == Version("1.2.3b4")
+        assert Executor(Version("1.2.3")).command_set(VersionParts.EPOCH, "1234") == Version(
             "1234!1.2.3"
         )
-        assert Executor(Version("1.2.3")).command_set(VersionParts.ALPHA, 4) == Version("1.2.3a4")
-        assert Executor(Version("1.2.3")).command_set(VersionParts.BETA, 4) == Version("1.2.3b4")
-        assert Executor(Version("1.2.3")).command_set(VersionParts.RC, 4) == Version("1.2.3rc4")
-        assert Executor(Version("1.2.3")).command_set(VersionParts.POST, 5) == Version(
+        assert Executor(Version("1.2.3")).command_set(VersionParts.ALPHA, "4") == Version("1.2.3a4")
+        assert Executor(Version("1.2.3")).command_set(VersionParts.BETA, "4") == Version("1.2.3b4")
+        assert Executor(Version("1.2.3")).command_set(VersionParts.RC, "4") == Version("1.2.3rc4")
+        assert Executor(Version("1.2.3")).command_set(VersionParts.POST, "5") == Version(
             "1.2.3.post5"
         )
-        assert Executor(Version("1.2.3+local")).command_set(VersionParts.DEV, 0) == Version(
+        assert Executor(Version("1.2.3+local")).command_set(VersionParts.DEV, "0") == Version(
             "1.2.3.dev0+local"
         )
+        assert Executor(Version("1.2.3")).command_set(VersionParts.LOCAL, "newloc") == Version(
+            "1.2.3+newloc"
+        )
+        assert Executor(Version("1.2.3.dev0+local")).command_set(
+            VersionParts.LOCAL, "newloc"
+        ) == Version("1.2.3.dev0+newloc")
 
     def test_command_bump(self) -> None:
         assert Executor(Version("1.2.3")).command_bump(VersionParts.MAJOR, 3) == Version("4.0.0")

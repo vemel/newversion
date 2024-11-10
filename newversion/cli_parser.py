@@ -55,7 +55,7 @@ class CLINamespace:
     release: VersionParts
     increment: int
     other: Version
-    value: int
+    value: str
     log_level: int
     package: bool
     save: bool
@@ -81,7 +81,7 @@ class EnumListAction(argparse.Action):
     ) -> None:
         self._enum_class = type
         super_choices = choices if choices is not None else list(self._enum_class)
-        self._is_singular = default is not None and nargs is None
+        self._is_singular = nargs in (None, "?")
         if self._is_singular:
             nargs = "?"
 
@@ -207,7 +207,7 @@ def parse_args(args: Sequence[str]) -> CLINamespace:
         help="Release type",
     )
 
-    parser_set = subparsers.add_parser(Commands.SET.value, help="Set release number")
+    parser_set = subparsers.add_parser(Commands.SET.value, help="Set release value")
     parser_set.add_argument(
         "release",
         type=VersionParts,
@@ -216,7 +216,7 @@ def parse_args(args: Sequence[str]) -> CLINamespace:
     )
     parser_set.add_argument(
         "value",
-        type=int,
+        type=str,
         help="Release number",
     )
 
@@ -309,12 +309,10 @@ def parse_args(args: Sequence[str]) -> CLINamespace:
     return CLINamespace(
         version=result.version,
         command=Commands(result.command) if result.command else Commands.UNKNOWN,
-        release=VersionParts(result.release)
-        if getattr(result, "release", "")
-        else VersionParts.MICRO,
+        release=result.release if getattr(result, "release", "") else VersionParts.MICRO,
         increment=getattr(result, "increment", 1),
         other=getattr(result, "other", Version.zero()),
-        value=getattr(result, "value", 1),
+        value=getattr(result, "value", ""),
         log_level=log_level,
         package=result.package,
         save=result.save,

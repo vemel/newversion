@@ -74,8 +74,8 @@ def main_cli() -> None:
     logger = setup_logging(config.log_level)
     try:
         output = main_api(config)
-    except CLIError:
-        logger.exception("Error")
+    except CLIError as e:
+        logger.error(e)  # noqa: TRY400
         sys.exit(1)
 
     if output:

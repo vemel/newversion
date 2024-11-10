@@ -12,6 +12,7 @@ from newversion.exceptions import (
     ExecutorError,
     PackageVersionError,
     ReleaseCannotBeBumpedError,
+    ValueMustBeIntError,
     VersionIsNotStableError,
 )
 from newversion.package_version import PackageVersion
@@ -127,7 +128,7 @@ class Executor:
 
         raise ReleaseCannotBeBumpedError(release)
 
-    def command_set(self, release: VersionParts, value: int) -> Version:
+    def command_set(self, release: VersionParts, value: str) -> Version:
         """
         Set version part.
 
@@ -138,23 +139,34 @@ class Executor:
         Returns:
             A new Version.
         """
+        if release == VersionParts.LOCAL:
+            return self.version.replace(local=value)
+
+        if not value.isdigit():
+            raise ValueMustBeIntError(release, value)
+
+        value_int = int(value)
         if release == VersionParts.PRE:
             return self.version.replace(
-                alpha=value if self.version.prerelease_type == VersionParts.ALPHA.value else None,
-                beta=value if self.version.prerelease_type == VersionParts.BETA.value else None,
-                rc=value if self.version.prerelease_type in {VersionParts.RC.value, None} else None,
+                alpha=value_int
+                if self.version.prerelease_type == VersionParts.ALPHA.value
+                else None,
+                beta=value_int if self.version.prerelease_type == VersionParts.BETA.value else None,
+                rc=value_int
+                if self.version.prerelease_type in {VersionParts.RC.value, None}
+                else None,
             )
 
         return self.version.replace(
-            post=value if release == VersionParts.POST else None,
-            epoch=value if release == VersionParts.EPOCH else None,
-            major=value if release == VersionParts.MAJOR else None,
-            minor=value if release == VersionParts.MINOR else None,
-            micro=value if release == VersionParts.MICRO else None,
-            alpha=value if release == VersionParts.ALPHA else None,
-            beta=value if release == VersionParts.BETA else None,
-            rc=value if release == VersionParts.RC else None,
-            dev=value if release == VersionParts.DEV else None,
+            post=value_int if release == VersionParts.POST else None,
+            epoch=value_int if release == VersionParts.EPOCH else None,
+            major=value_int if release == VersionParts.MAJOR else None,
+            minor=value_int if release == VersionParts.MINOR else None,
+            micro=value_int if release == VersionParts.MICRO else None,
+            alpha=value_int if release == VersionParts.ALPHA else None,
+            beta=value_int if release == VersionParts.BETA else None,
+            rc=value_int if release == VersionParts.RC else None,
+            dev=value_int if release == VersionParts.DEV else None,
         )
 
     def command_stable(self) -> Version:

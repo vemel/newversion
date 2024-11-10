@@ -131,7 +131,6 @@ select = [
     "PL",   # pylint
 ]
 ignore = [
-
     "D107",    # undocumented-public-init
     "D200",    # fits-on-one-line
     "D203",    # one-blank-line-before-class

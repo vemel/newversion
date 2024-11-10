@@ -217,7 +217,7 @@ def parse_args(args: Sequence[str]) -> CLINamespace:
     parser_set.add_argument(
         "value",
         type=str,
-        help="Release number",
+        help="Release number or string value",
     )
 
     subparsers.add_parser(Commands.STABLE.value, help="Get stable release of current version")
